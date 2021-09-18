@@ -1,5 +1,7 @@
+import dotenv from 'dotenv'
+dotenv.config()
+
 export default{
-    MONGO_DB: 'arq-meli',
-    MONGO_HOST: 'localhost',
-    PORT: '3000'
+    MONGO_URL: process.env.MONGO_URL || 'mongodb://localhost/arq-meli',
+    PORT: process.env.PORT || '3000'
 }
