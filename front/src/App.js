@@ -1,6 +1,7 @@
 import logo from './ml.png';
 import search from './lupa.png';
 import Listado from './listado/Listado';
+import CrearProducto from './crearProducto/CrearProducto';
 import './App.css';
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
           <a href="/">
             <img className="logoImg" src={logo} alt="MercadoTrucho"/>
           </a>
+          <b>MercadoTrucho</b>
         </div>
         <div className="header-middle-area">
           <nav className="main-nav" id="main-nav">
@@ -34,6 +36,8 @@ function App() {
         </div>
       </header>
       <Listado></Listado>
+      <br/>
+      <CrearProducto></CrearProducto>
     </div>
   );
 }
