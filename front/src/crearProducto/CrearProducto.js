@@ -46,6 +46,7 @@ class CrearProducto extends React.Component{
                     descripcion: "",
                     valor: 0
                 },error: null,isLoaded: true });
+                this.props.onProductCreated();
             
             })
             .catch(err => {this.setState({ product:{
@@ -56,7 +57,7 @@ class CrearProducto extends React.Component{
       }
 
     render(){
-        const { error, isLoaded, product } = this.state;
+        const { error, isLoaded } = this.state;
         if (error) {
         return <div>Error: {error.message}</div>;
         } else if (!isLoaded) {

@@ -10,7 +10,6 @@
   --fleck-color-1: #262626;
   background-color: #fff159;
   background-image: paint(fleck);
-  border-bottom: 1px solid #676767;
 }
 
 .site-header .logo, .site-header .logo>a {
@@ -55,7 +54,7 @@ li {
   text-align: -webkit-match-parent;
 }
 
-.site-header .main-nav>ul>li>a {
+.site-header .main-nav>ul>li .nav-option {
   font-family: MD Primer Bold,Rubik,Lato,Lucida Grande,Lucida Sans Unicode,Tahoma,Sans-Serif;
   font-style: normal;
   font-weight: 700;
@@ -72,24 +71,47 @@ li {
   justify-content: center;
   text-align: center;
   overflow: hidden;
+  cursor: pointer;
 }
 
 a {
   text-decoration: none;
 }
 
-.search-and-account {
-  position: fixed;
+.site-header .search-and-account {
   z-index: 15;
   right: var(--gap);
   align-items: center;
 }
 
-.search-and-account a {
-  margin-left: .5rem;
+.site-header .search-and-account>ul>li .nav-option {
   align-items: center;
+  font-family: MD Primer Bold,Rubik,Lato,Lucida Grande,Lucida Sans Unicode,Tahoma,Sans-Serif;
+  font-style: normal;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: .8rem;
+  height: 100%;
+  color: #262626;
+  padding: 1.2rem 1rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.site-header .search-and-account>ul {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  list-style: none;
+  list-style-image: none;
 }
 
 .search-img{
-  height: 50px;
+  height: 35px;
 }
