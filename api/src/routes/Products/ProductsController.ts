@@ -26,6 +26,15 @@ export const getProducts: RequestHandler = async (req, res) => {
     }
 }
 
+export const getProductsFromOwner: RequestHandler = async (req, res) => {
+    try{
+        const allProds = await Product.find({owner: req.params.owner})
+        return res.json(allProds)
+    }catch(error){
+        return res.json(error)
+    }
+}
+
 export const deleteProduct: RequestHandler = async (req, res) => {
     const prodToDelete = await Product.findByIdAndDelete(req.params.id)
     if (!prodToDelete) return res.status(404).json({message: 'Product not found'})

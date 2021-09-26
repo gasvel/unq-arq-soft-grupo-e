@@ -1,4 +1,5 @@
 import {Schema, model} from 'mongoose'
+import User from '../Users/User'
 
 const productSchema = new Schema({
     nombre:{
@@ -13,6 +14,11 @@ const productSchema = new Schema({
     },
     valor:{
         type: Number,
+        required: true
+    },
+    owner:{
+        type: Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     }
 }, {
