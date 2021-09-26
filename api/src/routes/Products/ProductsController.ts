@@ -1,10 +1,13 @@
 import { RequestHandler } from "express"
 import Product from "./Product"
+import User from "../Users/User"
 
 export const createProduct: RequestHandler = async (req, res) => {
    const prodExists = await Product.findOne({nombre: req.body.nombre}) 
-    if(prodExists)
-        return res.status(303).json({message: 'This product already exists'})
+   const ownerExists = await User.findById(req.body.owner) 
+   
+    if(prodExists || !ownerExists)
+        return res.status(303).json({message: 'This product already exists or owner does not exist'})
 
     const prod = new Product(req.body)
     const savedProd = await prod.save()

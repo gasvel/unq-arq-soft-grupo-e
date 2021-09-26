@@ -4,7 +4,9 @@ import User from './User'
 export const createUser: RequestHandler = async (req, res) => {
     const userExists = await User.findOne({ $or: [
         {username: req.body.username},
-        {email: req.body.email}
+        {email: req.body.email},
+        {emailCorporativo: req.body.emailCorporativo},
+        {razonSocial: req.body.razonSocial}
     ]})
      if(userExists)
          return res.status(303).json({message: 'This user already exists'})
