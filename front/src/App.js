@@ -1,45 +1,53 @@
-import logo from './ml.png';
-import search from './lupa.png';
+import React from 'react';
 import Listado from './listado/Listado';
 import CrearProducto from './crearProducto/CrearProducto';
+import Header from './header/Header';
 import './App.css';
+import RegistrarUsuario from './registerUser/RegistrarUsuario';
 
-function App() {
-  return (
+class App extends React.Component {
+
+  constructor(props){
+    super(props);
+    this.state = {
+        screen: 'list'
+    }
+
+}
+
+  handleProductCreation = () => {
+    alert('Producto Creado');
+  }
+
+  handleCreationScreen = () => {
+    this.setState({screen: 'createProduct'});
+  }
+
+  handleHomeScreen = () => {
+    this.setState({screen: 'list'});
+  }
+
+  handleRegisterScreen = () => {
+    this.setState({screen: 'createUser'});
+  }
+
+  render(){
+    let mainContent = <Listado/>;
+    switch(this.state.screen){
+      case 'createProduct':
+        mainContent = <CrearProducto onProductCreated={this.handleProductCreation}/>
+        break;
+      case 'createUser':
+        mainContent = <RegistrarUsuario onUserCreated={this.handleHomeScreen}/>
+    }
+    return (
     <div className="App">
-      <header className="site-header">
-        <div className="logo">
-          <a href="/">
-            <img className="logoImg" src={logo} alt="MercadoTrucho"/>
-          </a>
-          <b>MercadoTrucho</b>
-        </div>
-        <div className="header-middle-area">
-          <nav className="main-nav" id="main-nav">
-            <ul>
-              <li>
-                <a href="/">Home</a>
-              </li>
-              <li>
-                <a href="/">Categorias</a>
-              </li>
-              <li>
-                <a href="/">Más vendidos</a>
-              </li>
-            </ul>
-          </nav>
-        </div>
-        <div className="search-account-area">
-          <a href="/">
-            <img src={search} className="search-img" alt="Buscar"></img>
-          </a>
-        </div>
-      </header>
-      <Listado></Listado>
-      <br/>
-      <CrearProducto></CrearProducto>
+      <Header onProductCreationEvent={this.handleCreationScreen} onHome={this.handleHomeScreen} onRegister={this.handleRegisterScreen}/>
+      {mainContent}
+
     </div>
   );
+  }
 }
 
 export default App;
