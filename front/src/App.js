@@ -4,13 +4,15 @@ import CrearProducto from './crearProducto/CrearProducto';
 import Header from './header/Header';
 import './App.css';
 import RegistrarUsuario from './registerUser/RegistrarUsuario';
+import Login from './login/Login';
+
 
 class App extends React.Component {
 
   constructor(props){
     super(props);
     this.state = {
-        screen: 'list'
+        screen: 'login'
     }
 
 }
@@ -19,12 +21,16 @@ class App extends React.Component {
     alert('Producto Creado');
   }
 
+  handleLogin = () =>{
+    this.setState({screen: 'list'})
+  }
+
   handleCreationScreen = () => {
     this.setState({screen: 'createProduct'});
   }
 
   handleHomeScreen = () => {
-    this.setState({screen: 'list'});
+    this.setState({screen: 'login'});
   }
 
   handleRegisterScreen = () => {
@@ -32,13 +38,24 @@ class App extends React.Component {
   }
 
   render(){
-    let mainContent = <Listado/>;
+    if(this.state.screen === 'login' && localStorage.getItem("user") !== null){
+      this.setState({screen: "list"});
+    }
+    let mainContent;
     switch(this.state.screen){
       case 'createProduct':
-        mainContent = <CrearProducto onProductCreated={this.handleProductCreation}/>
+        mainContent = <CrearProducto onProductCreated={this.handleProductCreation}/>;
         break;
       case 'createUser':
-        mainContent = <RegistrarUsuario onUserCreated={this.handleHomeScreen}/>
+        mainContent = <RegistrarUsuario onUserCreated={this.handleHomeScreen}/>;
+        break
+      case 'list':
+        mainContent = <Listado/>;
+        break
+      default:
+        mainContent = <Login onUserLogin={this.handleLogin}/>;
+        break;
+
     }
     return (
     <div className="App">

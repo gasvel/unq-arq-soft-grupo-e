@@ -1,5 +1,6 @@
 import React from 'react';
 import './RegistrarUsuario.css';
+import AES from 'crypto-js/aes';
 
 class RegistrarUsuario extends React.Component{
     constructor(props){
@@ -8,13 +9,14 @@ class RegistrarUsuario extends React.Component{
             error: null,
             isLoaded: true,
             user: {
-                nombre: "",
-                apellido: "",
-                email: "",
-                esVendedor: false,
-                razonSocial: "",
-                emailCorpo: "",
-                password: ""
+                nombre:"",
+                apellido:"",
+                username:"",
+                password:"",
+                seller:false,
+                email:"",
+                razonSocial:"",
+                emailCorporativo:""
 
             }
         }
@@ -24,8 +26,9 @@ class RegistrarUsuario extends React.Component{
 
     handleFieldChange(event) {
         const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
+        let value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
+
     
         this.setState({
             ...this.state,
@@ -37,24 +40,25 @@ class RegistrarUsuario extends React.Component{
       }
 
       handleSubmit(event) {
-        console.log('Usuario: ' + JSON.stringify(this.state.user));
         event.preventDefault();
         this.setState({ ...this.state,isLoaded: false })
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(this.state.user)
+            headers: { 'Content-Type': 'application/json' ,'Access-Control-Allow-Origin':'http://localhost:3000'},
+            body: JSON.stringify(this.state.user.map((k,v) => {if(k==="password"){return AES.encrypt(v,'es un secreto').toString();}return v;}))
         };
         fetch('https://arq1-meli-grupo-e.herokuapp.com/users', requestOptions)
             .then(data => {
+                console.log(data);
                 this.setState({ user: {
-                    nombre: "",
-                    apellido: "",
-                    email: "",
-                    esVendedor: false,
-                    razonSocial: "",
-                    emailCorpo: "",
-                    password: ""
+                    nombre:"",
+                    apellido:"",
+                    username:"",
+                    password:"",
+                    seller:false,
+                    email:"",
+                    razonSocial:"",
+                    emailCorporativo:""
     
                 },error: null,isLoaded: true });
                 if(data.status === 200){
@@ -68,13 +72,14 @@ class RegistrarUsuario extends React.Component{
             
             })
             .catch(err => {this.setState({ user: {
-                nombre: "",
-                apellido: "",
-                email: "",
-                esVendedor: false,
-                razonSocial: "",
-                emailCorpo: "",
-                password: ""
+                nombre:"",
+                apellido:"",
+                username:"",
+                password:"",
+                seller:false,
+                email:"",
+                razonSocial:"",
+                emailCorporativo:""
 
             },error: err,isLoaded: true });alert("Ocurrió un error en el registro. Por favor intente nuevamente ");});
       }
@@ -93,7 +98,7 @@ class RegistrarUsuario extends React.Component{
                     <div className="form-field">
                         <label>
                             Mail Corporativo:
-                            <input name="emailCorpo" type="email" value={user.emailCorpo} onChange={this.handleFieldChange}></input>
+                            <input name="emailCorporativo" type="email" value={user.emailCorporativo} onChange={this.handleFieldChange}></input>
                         </label>
                     </div>
             </div>
@@ -120,6 +125,12 @@ class RegistrarUsuario extends React.Component{
                     </div>
                     <div className="form-field">
                         <label>
+                            Nombre de usuario:
+                            <input type="text" name="username" value={user.username} onChange={this.handleFieldChange}></input>
+                        </label>
+                    </div>
+                    <div className="form-field">
+                        <label>
                             Mail:
                             <input name="email" type="email" value={user.email} onChange={this.handleFieldChange}></input>
                         </label>
@@ -133,7 +144,7 @@ class RegistrarUsuario extends React.Component{
                     <div className="form-field">
                         <label>
                             Es vendedor?:
-                            <input type="checkbox" name="esVendedor" checked={user.esVendedor} onChange={this.handleFieldChange}></input>
+                            <input type="checkbox" name="seller" checked={user.seller} onChange={this.handleFieldChange}></input>
                         </label>
                     </div>
                     {camposVendedor}
