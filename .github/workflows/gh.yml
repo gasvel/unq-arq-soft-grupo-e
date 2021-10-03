@@ -2,7 +2,7 @@ name: Build and Deploy gh-page
 env:
   CI: false
 on:
-  pull_request:
+  push:
     branches:
       - master
     paths:
