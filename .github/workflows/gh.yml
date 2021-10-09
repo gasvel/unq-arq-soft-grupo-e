@@ -1,6 +1,8 @@
 name: Build and Deploy gh-page
+env:
+  CI: false
 on:
-  pull_request:
+  push:
     branches:
       - master
     paths:
@@ -26,6 +28,6 @@ jobs:
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@3.6.2
         with:
-          GITHUB_TOKEN: ${{ secrets.PUSH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages
-          FOLDER: build
+          FOLDER: front/build
