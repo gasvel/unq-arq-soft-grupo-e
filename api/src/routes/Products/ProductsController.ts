@@ -1,6 +1,7 @@
 import { RequestHandler } from "express"
 import Product from "./Product"
 import User from "../Users/User"
+import { isNullishCoalesce } from "typescript"
 
 export const createProduct: RequestHandler = async (req, res) => {
    const prodExists = await Product.findOne({nombre: req.body.nombre}) 
@@ -22,7 +23,23 @@ export const getProduct: RequestHandler = async (req, res) => {
 
 export const getProducts: RequestHandler = async (req, res) => {
     try{
-        const allProds = await Product.find()
+        const query = {}
+        if(req.query.valor != undefined)
+            query['valor'] = req.query.valor
+
+        if(req.query.gte != undefined)
+            query['valor'] = { $gte: req.query.gte}
+
+        if(req.query.lte != undefined)
+            query['valor'] = { $lte: req.query.lte}  
+        
+        if(req.query.categoria != undefined)
+            query['categoria'] = req.query.categoria
+
+        if(req.query.nombre != undefined)
+            query['nombre'] = req.query.nombre
+
+        const allProds = await Product.find(query)
         return res.json(allProds)
     }catch(error){
         return res.json(error)
@@ -36,6 +53,11 @@ export const getProductsFromOwner: RequestHandler = async (req, res) => {
     }catch(error){
         return res.json(error)
     }
+}
+
+export const getCategories: RequestHandler = async (req, res) => {
+    const categories = Product.schema.path('categoria').options.enum.values
+    return res.json(categories)
 }
 
 export const deleteProduct: RequestHandler = async (req, res) => {

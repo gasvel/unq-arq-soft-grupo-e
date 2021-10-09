@@ -10,7 +10,10 @@ export const createUser: RequestHandler = async (req, res) => {
     ]})
      if(userExists)
          return res.status(303).json({message: 'This user already exists'})
- 
+
+    if(req.body.seller && (!req.body.emailCorporativo || !req.body.razonSocial))
+        return res.status(303).json({message: 'If the user is a seller then razon social and corporative email should not be null'})
+    
      const user = new User(req.body)
      const savedUser = await user.save()
      res.json(savedUser)

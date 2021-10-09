@@ -3,9 +3,9 @@ import * as productController from './ProductsController'
 
 const router = Router();
 
-router.get('/products', productController.getProducts);
-
 router.get('/products/:owner', productController.getProductsFromOwner);
+
+router.get('/products', productController.getProducts);
 
 router.get('/product/:id', productController.getProduct);
 
