@@ -30,17 +30,18 @@ export const getProducts: RequestHandler = async (req, res) => {
             query['valor'] = req.query.valor
 
         if(req.query.gte != undefined)
-            query['valor'] = { $gte: req.query.gte}
-
+            query['valor'] = req.query.lte != undefined ? { $gte: req.query.gte, $lte: req.query.lte } : { $gte: req.query.gte }
+            
         if(req.query.lte != undefined)
-            query['valor'] = { $lte: req.query.lte}  
+            query['valor'] = req.query.gte  != undefined ? { $gte: req.query.gte, $lte: req.query.lte } : { $lte: req.query.lte }
         
+        console.log(query['valor'])
         if(req.query.categoria != undefined)
             query['categoria'] = req.query.categoria
 
         if(req.query.nombre != undefined)
             query['nombre'] = req.query.nombre
-
+        console.log(query)
         const allProds = await Product.find(query, null, paginate)
         return res.json(allProds)
     }catch(error){
