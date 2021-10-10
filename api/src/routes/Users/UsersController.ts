@@ -27,7 +27,9 @@ export const createUser: RequestHandler = async (req, res) => {
 
 export const getUsers: RequestHandler = async (req, res) => {
     try{
-        const allUsers = await User.find()
+        const paginate = (req.query.limit != undefined && req.query.page != undefined) ? getLimitSkip(req.query) : {}
+
+        const allUsers = await User.find({}, null, paginate)
         return res.json(allUsers)
     }catch(error){
         return res.json(error)
@@ -44,4 +46,15 @@ export const updateUser: RequestHandler = async (req, res) => {
     const userUpdated = await User.findByIdAndUpdate(req.params.id, req.body, {new: true})
     if (!userUpdated) return res.status(404).json({message: 'User not found'})
     return res.json(userUpdated)
+}
+
+function getLimitSkip(queryParams){
+    const paginate = {}
+
+    const page = parseInt(queryParams.page)
+    const limit = parseInt(queryParams.limit)
+    
+    paginate['limit'] = limit
+    paginate['skip'] = page > 0 ? (page - 1) * limit : 0
+    return paginate
 }

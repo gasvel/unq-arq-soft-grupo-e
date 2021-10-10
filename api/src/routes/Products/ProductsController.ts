@@ -24,6 +24,8 @@ export const getProduct: RequestHandler = async (req, res) => {
 export const getProducts: RequestHandler = async (req, res) => {
     try{
         const query = {}
+        const paginate = (req.query.limit != undefined && req.query.page != undefined) ? getLimitSkip(req.query) : {}
+
         if(req.query.valor != undefined)
             query['valor'] = req.query.valor
 
@@ -39,7 +41,7 @@ export const getProducts: RequestHandler = async (req, res) => {
         if(req.query.nombre != undefined)
             query['nombre'] = req.query.nombre
 
-        const allProds = await Product.find(query)
+        const allProds = await Product.find(query, null, paginate)
         return res.json(allProds)
     }catch(error){
         return res.json(error)
@@ -48,7 +50,10 @@ export const getProducts: RequestHandler = async (req, res) => {
 
 export const getProductsFromOwner: RequestHandler = async (req, res) => {
     try{
-        const allProds = await Product.find({owner: req.params.owner})
+
+        const paginate = (req.query.limit != undefined && req.query.page != undefined) ? getLimitSkip(req.query) : {}
+
+        const allProds = await Product.find({owner: req.params.owner}, null, paginate)
         return res.json(allProds)
     }catch(error){
         return res.json(error)
@@ -70,4 +75,15 @@ export const updateProduct: RequestHandler = async (req, res) => {
     const prodUpdated = await Product.findByIdAndUpdate(req.params.id, req.body, {new: true})
     if (!prodUpdated) return res.status(404).json({message: 'Product not found'})
     return res.json(prodUpdated)
+}
+
+function getLimitSkip(queryParams){
+    const paginate = {}
+
+    const page = parseInt(queryParams.page)
+    const limit = parseInt(queryParams.limit)
+    
+    paginate['limit'] = limit
+    paginate['skip'] = page > 0 ? (page - 1) * limit : 0
+    return paginate
 }
