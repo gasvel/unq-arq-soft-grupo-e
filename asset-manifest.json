@@ -1,24 +1,24 @@
 {
   "files": {
-    "main.css": "/unq-arq-soft-grupo-e/static/css/main.487aff56.chunk.css",
-    "main.js": "/unq-arq-soft-grupo-e/static/js/main.3b18792e.chunk.js",
-    "main.js.map": "/unq-arq-soft-grupo-e/static/js/main.3b18792e.chunk.js.map",
-    "runtime-main.js": "/unq-arq-soft-grupo-e/static/js/runtime-main.81abbb7e.js",
-    "runtime-main.js.map": "/unq-arq-soft-grupo-e/static/js/runtime-main.81abbb7e.js.map",
-    "static/js/2.6e8f6653.chunk.js": "/unq-arq-soft-grupo-e/static/js/2.6e8f6653.chunk.js",
-    "static/js/2.6e8f6653.chunk.js.map": "/unq-arq-soft-grupo-e/static/js/2.6e8f6653.chunk.js.map",
-    "static/js/3.803d8039.chunk.js": "/unq-arq-soft-grupo-e/static/js/3.803d8039.chunk.js",
-    "static/js/3.803d8039.chunk.js.map": "/unq-arq-soft-grupo-e/static/js/3.803d8039.chunk.js.map",
+    "main.css": "/unq-arq-soft-grupo-e/static/css/main.761b5a8c.chunk.css",
+    "main.js": "/unq-arq-soft-grupo-e/static/js/main.d3ecc20b.chunk.js",
+    "main.js.map": "/unq-arq-soft-grupo-e/static/js/main.d3ecc20b.chunk.js.map",
+    "runtime-main.js": "/unq-arq-soft-grupo-e/static/js/runtime-main.685c9261.js",
+    "runtime-main.js.map": "/unq-arq-soft-grupo-e/static/js/runtime-main.685c9261.js.map",
+    "static/js/2.f18f6f4a.chunk.js": "/unq-arq-soft-grupo-e/static/js/2.f18f6f4a.chunk.js",
+    "static/js/2.f18f6f4a.chunk.js.map": "/unq-arq-soft-grupo-e/static/js/2.f18f6f4a.chunk.js.map",
+    "static/js/3.7cf633ee.chunk.js": "/unq-arq-soft-grupo-e/static/js/3.7cf633ee.chunk.js",
+    "static/js/3.7cf633ee.chunk.js.map": "/unq-arq-soft-grupo-e/static/js/3.7cf633ee.chunk.js.map",
     "index.html": "/unq-arq-soft-grupo-e/index.html",
-    "static/css/main.487aff56.chunk.css.map": "/unq-arq-soft-grupo-e/static/css/main.487aff56.chunk.css.map",
-    "static/js/2.6e8f6653.chunk.js.LICENSE.txt": "/unq-arq-soft-grupo-e/static/js/2.6e8f6653.chunk.js.LICENSE.txt",
+    "static/css/main.761b5a8c.chunk.css.map": "/unq-arq-soft-grupo-e/static/css/main.761b5a8c.chunk.css.map",
+    "static/js/2.f18f6f4a.chunk.js.LICENSE.txt": "/unq-arq-soft-grupo-e/static/js/2.f18f6f4a.chunk.js.LICENSE.txt",
     "static/media/lupa.81ec5dc4.png": "/unq-arq-soft-grupo-e/static/media/lupa.81ec5dc4.png",
     "static/media/ml.270e3502.png": "/unq-arq-soft-grupo-e/static/media/ml.270e3502.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.81abbb7e.js",
-    "static/js/2.6e8f6653.chunk.js",
-    "static/css/main.487aff56.chunk.css",
-    "static/js/main.3b18792e.chunk.js"
+    "static/js/runtime-main.685c9261.js",
+    "static/js/2.f18f6f4a.chunk.js",
+    "static/css/main.761b5a8c.chunk.css",
+    "static/js/main.d3ecc20b.chunk.js"
   ]
 }
