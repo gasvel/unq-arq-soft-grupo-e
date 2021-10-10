@@ -1,5 +1,7 @@
 import React from 'react';
 import './CrearProducto.css';
+import AES from 'crypto-js/aes';
+import UploadFile from '../uploadFile/UploadFile';
 
 class CrearProducto extends React.Component{
     constructor(props){
@@ -15,6 +17,7 @@ class CrearProducto extends React.Component{
         }
         this.handleFieldChange = this.handleFieldChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleImgUploaded = this.handleImgUploaded.bind(this);
     }
 
     handleFieldChange(event) {
@@ -30,14 +33,29 @@ class CrearProducto extends React.Component{
         });
       }
 
+      handleImgUploaded(url){
+          this.setState( {...this.state,
+            product:{
+              ...this.state.product,imgUrl: url
+          }
+        }
+        );
+        console.log(this.state);
+
+        
+      }
+
       handleSubmit(event) {
         console.log('Producto: ' + JSON.stringify(this.state.product));
         event.preventDefault();
+        let userId = localStorage.getItem("user");
+        userId = AES.decrypt(userId,'es un secreto').toString();
+        let product = {...this.state.product,owner: userId};
         this.setState({ ...this.state,isLoaded: false })
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(this.state.product)
+            body: JSON.stringify(product)
         };
         fetch('https://arq1-meli-grupo-e.herokuapp.com/products', requestOptions)
             .then(data => {
@@ -65,6 +83,7 @@ class CrearProducto extends React.Component{
         } else {
         return (
             <div className="product-form">
+                <UploadFile onImageUploaded={this.handleImgUploaded}/>
                 <form onSubmit={this.handleSubmit}>
                     <div className="form-field">
                         <label>

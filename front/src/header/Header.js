@@ -45,13 +45,13 @@ class CrearProducto extends React.Component{
           <nav className="main-nav" id="main-nav">
             <ul>
               <li>
-              <div class="nav-option" onClick={this.goHome}>Home</div>
+              <div className="nav-option" onClick={this.goHome}>Home</div>
               </li>
               <li>
-                <div class="nav-option">Categorias</div>
+                <div className="nav-option">Categorias</div>
               </li>
               <li>
-              <div class="nav-option">Más vendidos</div>
+              <div className="nav-option">Más vendidos</div>
               </li>
               {crearProducto}
             </ul>

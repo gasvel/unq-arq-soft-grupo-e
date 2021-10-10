@@ -1,0 +1,9 @@
+.imgSection{
+    align-content: center;
+    text-align: center;
+}
+
+.imgPreview{
+    max-width: 200px;
+    max-height: 200px;
+}
