@@ -24,6 +24,18 @@ const productSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
+    },
+    photo:{
+        type: Buffer,
+        contentType: String
+    },
+    categoria:{
+        type: String,
+        required: true,
+        enum:{
+            values: ['Vehiculos', 'Agro', 'Alimentos', 'Mascotas', 'Colleciones', 'Arte', 'Tecnologia', 'Deportes', 'Inmuebles', 'Vestimenta'],
+            message: 'Category is not supported'
+        }
     }
 }, {
     versionKey: false,
