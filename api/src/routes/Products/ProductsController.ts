@@ -41,7 +41,7 @@ export const getProducts: RequestHandler = async (req, res) => {
 
         if(req.query.nombre != undefined)
             query['nombre'] = req.query.nombre
-        console.log(query)
+
         const allProds = await Product.find(query, null, paginate)
         return res.json(allProds)
     }catch(error){
