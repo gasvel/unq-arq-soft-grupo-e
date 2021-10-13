@@ -5,7 +5,6 @@ const productSchema = new Schema({
     nombre:{
         type: String,
         required: true,
-        unique: true,
         trim: true
     },
     descripcion:{
@@ -14,16 +13,29 @@ const productSchema = new Schema({
     },
     valor:{
         type: Number,
-        required: true
+        required: true,
+        min: [1, 'Minimum value is 1.']
     },
     stock:{
         type: Number,
-        required: true
+        required: true,
+        min: [1, 'Minimum value is 1.']
     },
     owner:{
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
+    },
+    photo:{
+        type: String,
+    },
+    categoria:{
+        type: String,
+        required: true,
+        enum:{
+            values: ['Vehiculos', 'Agro', 'Alimentos', 'Mascotas', 'Colleciones', 'Arte', 'Tecnologia', 'Deportes', 'Inmuebles', 'Vestimenta'],
+            message: 'Category is not supported'
+        }
     }
 }, {
     versionKey: false,

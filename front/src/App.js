@@ -5,6 +5,7 @@ import Header from './header/Header';
 import './App.css';
 import RegistrarUsuario from './registerUser/RegistrarUsuario';
 import Login from './login/Login';
+import app from './firebase';
 
 
 class App extends React.Component {
@@ -16,6 +17,10 @@ class App extends React.Component {
     }
 
 }
+
+  componentDidMount = () => {
+    app();
+  }
 
   handleProductCreation = () => {
     alert('Producto Creado');
@@ -58,7 +63,7 @@ class App extends React.Component {
 
     }
     return (
-    <div className="App">
+    <div className="App" data-testid="App">
       <Header onProductCreationEvent={this.handleCreationScreen} onHome={this.handleHomeScreen} onRegister={this.handleRegisterScreen}/>
       {mainContent}
 

@@ -33,16 +33,14 @@ const userSchema = new Schema({
     },
     razonSocial:{
         type: String,
-        required: true,
         unique: true,
         trim: true
     },
     emailCorporativo:{
         type: String,
-        required: true,
         unique: true,
         trim: true
-    },
+    }
 }, {
     versionKey: false,
     timestamps: true

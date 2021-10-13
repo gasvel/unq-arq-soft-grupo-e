@@ -1,5 +1,7 @@
 import React from 'react';
 import './CrearProducto.css';
+import AES from 'crypto-js/aes';
+import UploadFile from '../uploadFile/UploadFile';
 
 class CrearProducto extends React.Component{
     constructor(props){
@@ -10,41 +12,64 @@ class CrearProducto extends React.Component{
             product: {
                 nombre: "",
                 descripcion: "",
-                valor: 0
+                valor: 0,
+                stock: 1,
+                categoria: "Agro"
             }
         }
         this.handleFieldChange = this.handleFieldChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleImgUploaded = this.handleImgUploaded.bind(this);
     }
 
     handleFieldChange(event) {
         const target = event.target;
         const name = target.name;
+        let val = name === "valor" || name === "stock" ? parseInt(target.value) : target.value;
     
         this.setState({
             ...this.state,
             product:{
-                ...this.state.product,[name]: target.value
+                ...this.state.product,[name]: val
             }
           
         });
       }
 
+      handleImgUploaded(url){
+          this.setState( {...this.state,
+            product:{
+              ...this.state.product,photo: url
+          }
+        }
+        );
+        console.log(this.state);
+
+        
+      }
+
       handleSubmit(event) {
-        console.log('Producto: ' + JSON.stringify(this.state.product));
         event.preventDefault();
+        let userId = localStorage.getItem("user");
+        let product = {...this.state.product,owner: userId};
+        console.log('Producto: ' + JSON.stringify(product));
+
         this.setState({ ...this.state,isLoaded: false })
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(this.state.product)
+            body: JSON.stringify(product)
         };
         fetch('https://arq1-meli-grupo-e.herokuapp.com/products', requestOptions)
             .then(data => {
+                console.log(data);
                 this.setState({ product:{
                     nombre: "",
                     descripcion: "",
-                    valor: 0
+                    valor: 0,
+                    stock: 1,
+                    categoria: "Agro"
+                    
                 },error: null,isLoaded: true });
                 this.props.onProductCreated();
             
@@ -52,7 +77,9 @@ class CrearProducto extends React.Component{
             .catch(err => {this.setState({ product:{
                 nombre: "",
                 descripcion: "",
-                valor: 0
+                valor: 0,
+                stock: 1,
+                categoria: "Agro"
             },error: err,isLoaded: true })});
       }
 
@@ -65,6 +92,7 @@ class CrearProducto extends React.Component{
         } else {
         return (
             <div className="product-form">
+                <UploadFile onImageUploaded={this.handleImgUploaded}/>
                 <form onSubmit={this.handleSubmit}>
                     <div className="form-field">
                         <label>
@@ -81,7 +109,50 @@ class CrearProducto extends React.Component{
                     <div className="form-field">
                         <label>
                             Valor:
-                            $<input name="valor" type="number" value={this.state.product.valor} onChange={this.handleFieldChange}></input>
+                            $<input name="valor" type="number" value={this.state.product.valor} min="1" onChange={this.handleFieldChange}></input>
+                        </label>
+                    </div>
+                    <div className="form-field">
+                        <label>
+                            Stock:
+                            <input name="stock" type="number" value={this.state.product.stock} min="1" onChange={this.handleFieldChange}></input>
+                        </label>
+                    </div>
+                    <div className="form-field">
+                        <label>
+                            Categoria:
+                            <select name="categoria" value={this.state.product.categoria} onChange={this.handleFieldChange}>
+                                <option value="Agro">
+                                    Agro
+                                </option>
+                                <option value="Alimentos">
+                                    Alimentos
+                                </option>
+                                <option value="Arte">
+                                    Arte
+                                </option>
+                                <option value="Colleciones">
+                                    Coleciones
+                                </option>
+                                <option value="Deportes">
+                                    Deportes
+                                </option>
+                                <option value="Inmuebles">
+                                    Inmuebles
+                                </option>
+                                <option value="Mascotas">
+                                    Mascotas
+                                </option>
+                                <option value="Tecnologia">
+                                    Técnologia
+                                </option>
+                                <option value="Vehiculos">
+                                    Vehículos
+                                </option>
+                                <option value="Vestimenta">
+                                    Vestimenta
+                                </option>
+                            </select>
                         </label>
                     </div>
                     <div className="form-field">
