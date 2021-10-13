@@ -1,6 +1,5 @@
 import React from 'react';
 import './CrearProducto.css';
-import AES from 'crypto-js/aes';
 import UploadFile from '../uploadFile/UploadFile';
 
 class CrearProducto extends React.Component{
@@ -16,6 +15,10 @@ class CrearProducto extends React.Component{
                 stock: 1,
                 categoria: "Agro"
             }
+        }
+        console.log(this.props.product);
+        if(this.props.product){
+            this.state ={...this.state, product: this.props.product};
         }
         this.handleFieldChange = this.handleFieldChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -43,24 +46,33 @@ class CrearProducto extends React.Component{
           }
         }
         );
-        console.log(this.state);
-
         
       }
 
       handleSubmit(event) {
         event.preventDefault();
         let userId = localStorage.getItem("user");
+        if(!this.state.product.photo){
+            alert("Debe cargar una imagen del producto para poder publicarlo.");
+            return;
+        }
         let product = {...this.state.product,owner: userId};
-        console.log('Producto: ' + JSON.stringify(product));
-
         this.setState({ ...this.state,isLoaded: false })
-        const requestOptions = {
+        const requestOptions = this.state.product._id ? {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(product)
+        } : {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(product)
         };
-        fetch('https://arq1-meli-grupo-e.herokuapp.com/products', requestOptions)
+
+        let url = 'https://arq1-meli-grupo-e.herokuapp.com/products';
+        if(this.state.product._id){
+            url = url + '/' + this.state.product._id
+        }
+        fetch(url, requestOptions)
             .then(data => {
                 console.log(data);
                 this.setState({ product:{
@@ -85,6 +97,7 @@ class CrearProducto extends React.Component{
 
     render(){
         const { error, isLoaded } = this.state;
+        let btnMsg = this.state.product._id ? "Actualizar" : "Crear producto";
         if (error) {
         return <div>Error: {error.message}</div>;
         } else if (!isLoaded) {
@@ -92,12 +105,12 @@ class CrearProducto extends React.Component{
         } else {
         return (
             <div className="product-form">
-                <UploadFile onImageUploaded={this.handleImgUploaded}/>
+                <UploadFile onImageUploaded={this.handleImgUploaded} preview={this.state.product.photo}/>
                 <form onSubmit={this.handleSubmit}>
                     <div className="form-field">
                         <label>
                             Nombre:
-                            <input type="text" name="nombre" value={this.state.product.nombre} onChange={this.handleFieldChange}></input>
+                            <input type="text" name="nombre" required="true" value={this.state.product.nombre} onChange={this.handleFieldChange}></input>
                         </label>
                     </div>
                     <div className="form-field">
@@ -109,13 +122,13 @@ class CrearProducto extends React.Component{
                     <div className="form-field">
                         <label>
                             Valor:
-                            $<input name="valor" type="number" value={this.state.product.valor} min="1" onChange={this.handleFieldChange}></input>
+                            $<input name="valor" type="number" required="true" value={this.state.product.valor} min="1" onChange={this.handleFieldChange}></input>
                         </label>
                     </div>
                     <div className="form-field">
                         <label>
                             Stock:
-                            <input name="stock" type="number" value={this.state.product.stock} min="1" onChange={this.handleFieldChange}></input>
+                            <input name="stock" type="number" required="true" value={this.state.product.stock} min="1" onChange={this.handleFieldChange}></input>
                         </label>
                     </div>
                     <div className="form-field">
@@ -156,7 +169,7 @@ class CrearProducto extends React.Component{
                         </label>
                     </div>
                     <div className="form-field">
-                        <button type="submit" title="Crear producto">Crear producto</button>
+                        <button type="submit" title={btnMsg}>{btnMsg}</button>
                     </div>
                 </form>
                 </div>
