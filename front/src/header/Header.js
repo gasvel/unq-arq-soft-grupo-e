@@ -17,6 +17,10 @@ class CrearProducto extends React.Component{
       this.props.onRegister();
     }
 
+    goToUserProducts = () =>{
+      this.props.onUserProducts();
+    }
+
     signOut = () =>{
       localStorage.removeItem("user");
       this.goHome();
@@ -26,12 +30,14 @@ class CrearProducto extends React.Component{
       let userId = localStorage.getItem("user");
       let username = localStorage.getItem("username");
       let crearProducto;
+      let misProductos;
       let registerOrSignOut = <div className="nav-option" onClick={this.goToRegister}>Registrarme</div>;
       if(userId !== null){
         registerOrSignOut = <div className="nav-option" onClick={this.signOut}>{username} ,Salir</div>;
         crearProducto = <li>
         <div class="nav-option" onClick={this.goToCreation}>Publicar</div>
       </li>;
+      misProductos = <li><div class="nav-option" onClick={this.goToUserProducts}>Mis productos</div></li>
       }
         return(<header className="site-header">
         <div className="logo">
@@ -54,6 +60,7 @@ class CrearProducto extends React.Component{
               <div className="nav-option">Más vendidos</div>
               </li>
               {crearProducto}
+              {misProductos}
             </ul>
           </nav>
         </div>

@@ -36,18 +36,18 @@ class Listado extends React.Component{
       return <div>Cargando...</div>;
     } else {
       return (
-        <ul>
+        <div>
           {items.map(item => (
-            <li key={item._id}>
+            <div key={item._id} className="product-card">
               <div className="product-image"><img src={item.photo} height="100px"/></div>
               <div className="product-content">
               <h2>{item.nombre}</h2>
               <p>{item.descripcion}</p>
               $ {item.valor}
                 </div>  
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       );
     }
   }

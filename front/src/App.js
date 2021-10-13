@@ -6,6 +6,7 @@ import './App.css';
 import RegistrarUsuario from './registerUser/RegistrarUsuario';
 import Login from './login/Login';
 import app from './firebase';
+import UserListado from './productosUsuario/UserListado';
 
 
 class App extends React.Component {
@@ -34,12 +35,20 @@ class App extends React.Component {
     this.setState({screen: 'createProduct'});
   }
 
+  handleProductEdit = (prod) => {
+    this.setState({screen: 'editProduct',product: prod});
+  }
+
   handleHomeScreen = () => {
     this.setState({screen: 'login'});
   }
 
   handleRegisterScreen = () => {
     this.setState({screen: 'createUser'});
+  }
+
+  handleUserProductsScreen = () => {
+    this.setState({screen: 'userProducts'});
   }
 
   render(){
@@ -57,6 +66,12 @@ class App extends React.Component {
       case 'list':
         mainContent = <Listado/>;
         break
+      case 'userProducts':
+        mainContent = <UserListado onProductEdit={this.handleProductEdit}/>;
+        break;
+      case 'editProduct':
+        mainContent = <CrearProducto onProductCreated={this.handleProductCreation} product={this.state.product}/>
+        break;
       default:
         mainContent = <Login onUserLogin={this.handleLogin}/>;
         break;
@@ -64,7 +79,7 @@ class App extends React.Component {
     }
     return (
     <div className="App" data-testid="App">
-      <Header onProductCreationEvent={this.handleCreationScreen} onHome={this.handleHomeScreen} onRegister={this.handleRegisterScreen}/>
+      <Header onProductCreationEvent={this.handleCreationScreen} onHome={this.handleHomeScreen} onRegister={this.handleRegisterScreen} onUserProducts={this.handleUserProductsScreen}/>
       {mainContent}
 
     </div>
