@@ -1,6 +1,8 @@
 import React from 'react';
 import './RegistrarUsuario.css';
 import AES from 'crypto-js/aes';
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+
 
 class RegistrarUsuario extends React.Component{
     constructor(props){
@@ -22,6 +24,33 @@ class RegistrarUsuario extends React.Component{
         }
         this.handleFieldChange = this.handleFieldChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleGoogleSignIn = this.handleGoogleSignIn.bind(this);
+    }
+    
+
+    handleGoogleSignIn(event){
+        const provider = new GoogleAuthProvider();
+        const auth = getAuth();
+        signInWithPopup(auth, provider)
+        .then((result) => {
+            // This gives you a Google Access Token. You can use it to access the Google API.
+            const credential = GoogleAuthProvider.credentialFromResult(result);
+            const token = credential.accessToken;
+            // The signed-in user info.
+            const user = result.user;
+            console.log(JSON.stringify(user));
+            console.log(token);
+            // ...
+        }).catch((error) => {
+            // Handle Errors here.
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // The email of the user's account used.
+            const email = error.email;
+            // The AuthCredential type that was used.
+            const credential = GoogleAuthProvider.credentialFromError(error);
+            // ...
+        });
     }
 
     handleFieldChange(event) {
@@ -86,7 +115,14 @@ class RegistrarUsuario extends React.Component{
 
     render(){
         const { error, isLoaded,user } = this.state;
+        const auth = getAuth().currentUser;
+        console.log(auth);
         let camposVendedor = <br/>
+        if(auth){
+            <div>
+                {auth.displayName}
+            </div>
+        }
         if(user.esVendedor){
             camposVendedor = <div>
                 <div className="form-field">
@@ -110,6 +146,7 @@ class RegistrarUsuario extends React.Component{
         } else {
         return (
             <div className="product-form">
+                <button className="google-sign-in-btn" onClick={this.handleGoogleSignIn}>Registrarme con mi cuenta de Google</button>
                 <form onSubmit={this.handleSubmit}>
                     <div className="form-field">
                         <label>

@@ -34,8 +34,7 @@ class Login extends React.Component {
       handleSubmit(event) {
         event.preventDefault();
         this.setState({ ...this.state,isLoaded: false })
-        const pass = AES.encrypt(this.state.user.password,'es un secreto').toString();
-        fetch('https://arq1-meli-grupo-e.herokuapp.com/users/?username='+this.state.user.username+'&password='+pass)
+        fetch('https://arq1-meli-grupo-e.herokuapp.com/users/'+this.state.user.username+'&'+this.state.user.password)
             .then((res) => res.json()).then(data => {
                 console.log(data);
                 this.setState({ user: {
@@ -43,9 +42,9 @@ class Login extends React.Component {
                     password:""
     
                 },error: null,isLoaded: true });
-                if(data.length > 0){
-                    localStorage.setItem("user",AES.encrypt(data[0]._id,'es un secreto').toString());
-                    localStorage.setItem("username",data[0].username);
+                if(data){
+                    localStorage.setItem("user",data._id);
+                    localStorage.setItem("username",data.username);
                     this.props.onUserLogin();
                 }
                 else{
