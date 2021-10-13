@@ -39,7 +39,7 @@ class Listado extends React.Component{
         <ul>
           {items.map(item => (
             <li key={item._id}>
-              <div className="product-image"></div>
+              <div className="product-image"><img src={item.photo} height="100px"/></div>
               <div className="product-content">
               <h2>{item.nombre}</h2>
               <p>{item.descripcion}</p>
