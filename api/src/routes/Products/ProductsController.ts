@@ -4,11 +4,14 @@ import User from "../Users/User"
 import { isNullishCoalesce } from "typescript"
 
 export const createProduct: RequestHandler = async (req, res) => {
-   const prodExists = await Product.findOne({nombre: req.body.nombre}) 
-   const ownerExists = await User.findById(req.body.owner) 
    
-    if(prodExists || !ownerExists)
-        return res.status(303).json({message: 'This product already exists or owner does not exist'})
+    if(!req.body.categoria || !req.body.nombre || !req.body.valor || !req.body.stock || !req.body.owner)
+        return res.status(400).json({message: 'Missing required field, check name value stock and owner should not be empty.'})
+   
+    const ownerExists = await User.findById(req.body.owner)
+   
+    if(!ownerExists)
+        return res.status(400).json({message: 'Owner does not exist for this product.'})
 
     const prod = new Product(req.body)
     const savedProd = await prod.save()
@@ -35,12 +38,11 @@ export const getProducts: RequestHandler = async (req, res) => {
         if(req.query.lte != undefined)
             query['valor'] = req.query.gte  != undefined ? { $gte: req.query.gte, $lte: req.query.lte } : { $lte: req.query.lte }
         
-        console.log(query['valor'])
         if(req.query.categoria != undefined)
             query['categoria'] = req.query.categoria
 
         if(req.query.nombre != undefined)
-            query['nombre'] = req.query.nombre
+            query['nombre'] = { $regex: '.*' + req.query.nombre + '.*' }
 
         const allProds = await Product.find(query, null, paginate)
         return res.json(allProds)
@@ -54,7 +56,7 @@ export const getProductsFromOwner: RequestHandler = async (req, res) => {
 
         const paginate = (req.query.limit != undefined && req.query.page != undefined) ? getLimitSkip(req.query) : {}
 
-        const allProds = await Product.find({owner: req.params.owner}, null, paginate)
+        const allProds = await Product.find({owner: req.params.owner}, null, paginate).populate('owner', 'username')
         return res.json(allProds)
     }catch(error){
         return res.json(error)

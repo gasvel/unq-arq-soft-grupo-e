@@ -40,10 +40,6 @@ const userSchema = new Schema({
         type: String,
         unique: true,
         trim: true
-    },
-    photo:{
-        type: Buffer,
-        contentType: String
     }
 }, {
     versionKey: false,
