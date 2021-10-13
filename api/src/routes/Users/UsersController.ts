@@ -2,6 +2,10 @@ import { RequestHandler } from "express"
 import User from './User'
 
 export const createUser: RequestHandler = async (req, res) => {
+    
+    if(!req.body.nombre || !req.body.apellido || !req.body.username || !req.body.password || !req.body.seller || !req.body.email)
+        return res.status(400).json({message: 'Missing required field, check name lastname username password seller and email should not be empty.'})
+    
     const userExists = await User.findOne({ $or: [
         {username: req.body.username},
         {email: req.body.email},
@@ -12,7 +16,7 @@ export const createUser: RequestHandler = async (req, res) => {
          return res.status(303).json({message: 'This user already exists'})
 
     if(req.body.seller && (!req.body.emailCorporativo || !req.body.razonSocial))
-        return res.status(303).json({message: 'If the user is a seller then razon social and corporative email should not be null'})
+        return res.status(400).json({message: 'If the user is a seller then razon social and corporative email should not be null'})
     
      const user = new User(req.body)
      const savedUser = await user.save()

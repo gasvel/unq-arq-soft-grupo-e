@@ -5,7 +5,6 @@ const productSchema = new Schema({
     nombre:{
         type: String,
         required: true,
-        unique: true,
         trim: true
     },
     descripcion:{
@@ -14,11 +13,13 @@ const productSchema = new Schema({
     },
     valor:{
         type: Number,
-        required: true
+        required: true,
+        min: [1, 'Minimum value is 1.']
     },
     stock:{
         type: Number,
-        required: true
+        required: true,
+        min: [1, 'Minimum value is 1.']
     },
     owner:{
         type: Schema.Types.ObjectId,
@@ -26,8 +27,7 @@ const productSchema = new Schema({
         required: true
     },
     photo:{
-        type: Buffer,
-        contentType: String
+        type: String,
     },
     categoria:{
         type: String,
