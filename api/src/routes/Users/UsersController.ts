@@ -2,8 +2,8 @@ import { RequestHandler } from "express"
 import User from './User'
 
 export const createUser: RequestHandler = async (req, res) => {
-    
-    if(!req.body.nombre || !req.body.apellido || !req.body.username || !req.body.password || !req.body.seller || !req.body.email)
+    console.log(req.body)
+    if(!req.body.nombre || !req.body.apellido || !req.body.username || !req.body.password || req.body.seller == null || !req.body.email)
         return res.status(400).json({message: 'Missing required field, check name lastname username password seller and email should not be empty.'})
     
     const userExists = await User.findOne({ $or: [
@@ -12,8 +12,9 @@ export const createUser: RequestHandler = async (req, res) => {
         {emailCorporativo: req.body.emailCorporativo},
         {razonSocial: req.body.razonSocial}
     ]})
-     if(userExists)
-         return res.status(303).json({message: 'This user already exists'})
+    
+    if(userExists)
+        return res.status(303).json({message: 'This user already exists'})
 
     if(req.body.seller && (!req.body.emailCorporativo || !req.body.razonSocial))
         return res.status(400).json({message: 'If the user is a seller then razon social and corporative email should not be null'})
