@@ -1,7 +1,7 @@
-import app from '../src/app'
+import app from '../app'
 import request from 'supertest'
-import User from '../src/routes/Users/User'
-import Product from '../src/routes/Products/Product'
+import User from '../routes/Users/User'
+import Product from '../routes/Products/Product'
 
 describe('create product', () => {
     
