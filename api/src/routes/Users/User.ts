@@ -40,6 +40,11 @@ const userSchema = new Schema({
         type: String,
         unique: true,
         trim: true
+    },
+    uid:{
+        type:String,
+        required: true,
+        unique: true
     }
 }, {
     versionKey: false,
