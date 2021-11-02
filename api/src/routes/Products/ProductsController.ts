@@ -2,9 +2,14 @@ import { RequestHandler } from "express"
 import Product from "./Product"
 import User from "../Users/User"
 import { isNullishCoalesce } from "typescript"
+import ValidateAuthService from "../ValidateAuthService"
+
 
 export const createProduct: RequestHandler = async (req, res) => {
-   
+    let uid = ValidateAuthService.validateAuth(req,res)
+    if(!uid){
+        return res.status(403).json({message: "Unauthorized"})
+    }
     if(!req.body.categoria || !req.body.nombre || !req.body.valor || !req.body.stock || !req.body.owner)
         return res.status(400).json({message: 'Missing required field, check name value stock and owner should not be empty.'})
    
@@ -69,12 +74,20 @@ export const getCategories: RequestHandler = async (req, res) => {
 }
 
 export const deleteProduct: RequestHandler = async (req, res) => {
+    let uid = ValidateAuthService.validateAuth(req,res)
+    if(!uid){
+        return res.status(403).json({message: "Unauthorized"})
+    }
     const prodToDelete = await Product.findByIdAndDelete(req.params.id)
     if (!prodToDelete) return res.status(404).json({message: 'Product not found'})
     return res.status(200).json({message: 'Product deleted'})
 }
 
 export const updateProduct: RequestHandler = async (req, res) => {
+    let uid = ValidateAuthService.validateAuth(req,res)
+    if(!uid){
+        return res.status(403).json({message: "Unauthorized"})
+    }
     const prodUpdated = await Product.findByIdAndUpdate(req.params.id, req.body, {new: true})
     if (!prodUpdated) return res.status(404).json({message: 'Product not found'})
     return res.json(prodUpdated)
