@@ -1,12 +1,19 @@
 import app from '../app'
 import request from 'supertest'
 import User from '../routes/Users/User'
+import ValidateAuthService from '../routes/ValidateAuthService'
+
 
 describe('create user', () => {
+    beforeAll(async () => {
+        ValidateAuthService.validateAuth = jest.fn().mockReturnValue(1)
+
+    })
 
     test('post new user returning status 200', async () => {
 
         User.findOne = jest.fn().mockReturnValue(null)
+
 
         User.prototype.save = jest.fn().mockImplementation( () => {
             
@@ -41,7 +48,7 @@ describe('create user', () => {
         expect(response.statusCode).toBe(200)
     })
 
-    test('post new user returning status 400 missing required fields', async () => {
+        test('post new user returning status 400 missing required fields', async () => {
 
         User.findOne = jest.fn().mockReturnValue({
             _id: '6150d616f3a8afa65c28d63c',
@@ -87,9 +94,55 @@ describe('create user', () => {
         expect(response.statusCode).toBe(400)
         expect(response.text).toEqual(expect.stringContaining('Missing required field, check name lastname username password seller and email should not be empty.'))
     })
+
+    test('post new user returning status 403', async () => {
+
+        User.findOne = jest.fn().mockReturnValue(null)
+        ValidateAuthService.validateAuth = jest.fn().mockImplementation((req,res) =>{
+            return null
+        })
+
+
+        User.prototype.save = jest.fn().mockImplementation( () => {
+            
+            const user =  new User({
+                _id: "6150d5b7f3a8afa65c28d634",
+                nombre: "hello world user2",
+                apellido: "apellido test2",
+                username: "username3",
+                password: "password1",
+                seller: true,
+                email: "email3",
+                razonSocial: "123",
+                emailCorporativo: "emailC3"
+            })
+
+            return user
+        })
+        
+        const response = await request(app).post('/users').send({
+            _id: "6150d5b7f3a8afa65c28d634",
+            nombre: "hello world user2",
+            apellido: "apellido test2",
+            username: "username3",
+            password: "password1",
+            seller: true,
+            email: "email3",
+            razonSocial: "123",
+            emailCorporativo: "emailC3"
+          })
+
+        expect(response.statusCode).toBe(403)
+    })
+
+
 })
 
 describe('get users', () => {
+    beforeAll(async () => {
+        ValidateAuthService.validateAuth = jest.fn().mockReturnValue(1)
+
+    })
     
     test('get user should return 200 status', async () => {
 
@@ -150,6 +203,10 @@ describe('get users', () => {
 })
 
 describe('delete user', () => {
+    beforeAll(async () => {
+        ValidateAuthService.validateAuth = jest.fn().mockReturnValue(1)
+
+    })
     
     test('delete user should return 200 status', async () => {
     
@@ -175,6 +232,10 @@ describe('delete user', () => {
 })
 
 describe('update user', () => {
+    beforeAll(async () => {
+        ValidateAuthService.validateAuth = jest.fn().mockReturnValue(1)
+
+    })
     
     test('update user should return 200 status', async () => {
     

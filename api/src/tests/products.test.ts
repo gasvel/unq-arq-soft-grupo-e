@@ -2,6 +2,8 @@ import app from '../app'
 import request from 'supertest'
 import User from '../routes/Users/User'
 import Product from '../routes/Products/Product'
+import ValidateAuthService from '../routes/ValidateAuthService'
+
 
 describe('create product', () => {
     
@@ -17,7 +19,10 @@ describe('create product', () => {
             razonSocial: '12',
             emailCorporativo: 'emailC1',
         })
+        ValidateAuthService.validateAuth = jest.fn().mockReturnValue(1)
+
     });
+
 
     test('post new product returning status 200', async () => {
 
@@ -66,6 +71,10 @@ describe('create product', () => {
 })
 
 describe('get product', () => {
+    beforeAll(async () => {
+        ValidateAuthService.validateAuth = jest.fn().mockReturnValue(1)
+
+    })
     
     test('get product should return 200 status', async () => {
         
@@ -139,6 +148,10 @@ describe('get product', () => {
 
 describe('delete product', () => {
     
+    beforeAll(async () => {
+        ValidateAuthService.validateAuth = jest.fn().mockReturnValue(1)
+
+    })
     test('delete product should return 200 status', async () => {
     
         const idProd = '6150d616f3a8afa65c28d63c'
@@ -161,6 +174,10 @@ describe('delete product', () => {
 })
 
 describe('update product', () => {
+    beforeAll(async () => {
+        ValidateAuthService.validateAuth = jest.fn().mockReturnValue(1)
+
+    })
     
     test('update product should return 200 status', async () => {
     
