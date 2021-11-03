@@ -7,8 +7,8 @@ export const createUser: RequestHandler = async (req, res) => {
     if(!uid){
         return res.status(403).json({message: "Unauthorized"})
     }
-    if(!req.body.nombre || !req.body.apellido || !req.body.username || !req.body.password || req.body.seller == null || !req.body.email)
-        return res.status(400).json({message: 'Missing required field, check name lastname username password seller and email should not be empty.'})
+    if(!req.body.nombre || !req.body.apellido || !req.body.username || req.body.seller == null || !req.body.email)
+        return res.status(400).json({message: 'Missing required field, check name lastname username seller and email should not be empty.'})
     
     const userExists = await User.findOne({ $or: [
         {username: req.body.username},
@@ -30,11 +30,11 @@ export const createUser: RequestHandler = async (req, res) => {
  }
 
  export const getUser: RequestHandler = async (req, res) => {
-    let uid = ValidateAuthService.validateAuth(req,res)
+    let uidToken = ValidateAuthService.validateAuth(req,res)
     if(!uid){
         return res.status(403).json({message: "Unauthorized"})
     }
-    const userFound = await User.findOne({username: req.params.username, password: req.params.password}) 
+    const userFound = await User.findOne({uid : uidToken})
     if (!userFound) return res.status(404).json({message: 'User not found'})
     return res.json(userFound)
 }

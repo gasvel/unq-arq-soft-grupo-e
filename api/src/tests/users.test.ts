@@ -22,7 +22,6 @@ describe('create user', () => {
                 nombre: "hello world user2",
                 apellido: "apellido test2",
                 username: "username3",
-                password: "password1",
                 seller: true,
                 email: "email3",
                 razonSocial: "123",
@@ -37,7 +36,6 @@ describe('create user', () => {
             nombre: "hello world user2",
             apellido: "apellido test2",
             username: "username3",
-            password: "password1",
             seller: true,
             email: "email3",
             razonSocial: "123",
@@ -55,7 +53,6 @@ describe('create user', () => {
             nombre: 'cambia nombre opa',
             apellido: 'apellido test',
             username: 'username1',
-            password: 'password1',
             seller: true,
             email: 'email1',
             razonSocial: '12',
@@ -69,7 +66,6 @@ describe('create user', () => {
                 nombre: "hello world user1",
                 apellido: "apellido test",
                 username: "username2",
-                password: "password1",
                 seller: true,
                 email: "email2",
                 razonSocial: "1",
@@ -83,7 +79,6 @@ describe('create user', () => {
             _id: "6150d5b7f3a8afa65c28d633",
             apellido: "apellido test",
             username: "username2",
-            password: "password1",
             seller: true,
             email: "email2",
             razonSocial: "1",
@@ -92,7 +87,7 @@ describe('create user', () => {
 
         expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
         expect(response.statusCode).toBe(400)
-        expect(response.text).toEqual(expect.stringContaining('Missing required field, check name lastname username password seller and email should not be empty.'))
+        expect(response.text).toEqual(expect.stringContaining('Missing required field, check name lastname username seller and email should not be empty.'))
     })
 
     test('post new user returning status 403', async () => {
@@ -110,7 +105,6 @@ describe('create user', () => {
                 nombre: "hello world user2",
                 apellido: "apellido test2",
                 username: "username3",
-                password: "password1",
                 seller: true,
                 email: "email3",
                 razonSocial: "123",
@@ -125,7 +119,6 @@ describe('create user', () => {
             nombre: "hello world user2",
             apellido: "apellido test2",
             username: "username3",
-            password: "password1",
             seller: true,
             email: "email3",
             razonSocial: "123",
@@ -147,21 +140,19 @@ describe('get users', () => {
     test('get user should return 200 status', async () => {
 
         const userUsername = "username3"
-        const userPassword = "password1"
 
         User.findOne = jest.fn().mockReturnValue({
             _id: "6150d5b7f3a8afa65c28d634",
             nombre: "hello world user2",
             apellido: "apellido test2",
             username: userUsername,
-            password: userPassword,
             seller: true,
             email: "email3",
             razonSocial: "123",
             emailCorporativo: "emailC3"
         })
 
-        const response = await request(app).get("/users/" + userUsername + "&" + userPassword).send()
+        const response = await request(app).get("/users/login").send()
         expect(response.headers["content-type"]).toEqual(expect.stringContaining("json"))
         expect(response.statusCode).toBe(200)
     })
@@ -174,7 +165,6 @@ describe('get users', () => {
               nombre: "hello world user1",
               apellido: "apellido test",
               username: "username2",
-              password: "password1",
               seller: true,
               email: "email2",
               razonSocial: "1",
@@ -185,7 +175,6 @@ describe('get users', () => {
               nombre: "cambia nombre opa",
               apellido: "apellido test",
               username: "username1",
-              password: "password1",
               seller: true,
               email: "email1",
               razonSocial: "12",
@@ -217,7 +206,6 @@ describe('delete user', () => {
             nombre: "hello world user2",
             apellido: "apellido test2",
             username: "username3",
-            password: "password1",
             seller: true,
             email: "email3",
             razonSocial: "123",
@@ -246,7 +234,6 @@ describe('update user', () => {
             nombre: "hello world user2",
             apellido: "apellido test2",
             username: "username3",
-            password: "password1",
             seller: true,
             email: "email3",
             razonSocial: "123",

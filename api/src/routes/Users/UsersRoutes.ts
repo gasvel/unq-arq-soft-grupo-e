@@ -5,7 +5,7 @@ const router = Router();
 
 router.get('/users', userController.getUsers);
 
-router.get('/users/:username&:password', userController.getUser);
+router.get('/users/login', userController.getUser);
 
 router.post('/users', userController.createUser);
 
