@@ -1,5 +1,9 @@
 import React from 'react';
 import './UserListado.css';
+import { getAuth} from "@firebase/auth";
+import {Card,Container,Row,Col} from 'react-bootstrap';
+
+
 
 class UserListado extends React.Component{
     constructor(props){
@@ -14,17 +18,20 @@ class UserListado extends React.Component{
 
     handleDelete = (prodId) => {
         this.setState({ ...this.state,isLoaded: false })
-        const requestOptions = {
-            method: 'DELETE'
-        };
-        fetch('https://arq1-meli-grupo-e.herokuapp.com/products/' + prodId, requestOptions)
-            .then(data => {
-                console.log(data);
-                this.setState({ ...this.state,error: null,isLoaded: true });
-                this.componentDidMount();
-            
-            })
-            .catch(err => {this.setState({ ...this.state,error: err,isLoaded: true })});
+        getAuth().currentUser.getIdToken(true).then((idToken) => {
+            const requestOptions = {
+                method: 'DELETE',
+                headers: {'Authorization' : "Bearer " + idToken}
+            };
+            fetch('https://arq1-meli-grupo-e.herokuapp.com/products/' + prodId, requestOptions)
+                .then(data => {
+                    console.log(data);
+                    this.setState({ ...this.state,error: null,isLoaded: true });
+                    this.componentDidMount();
+                
+                })
+                .catch(err => {this.setState({ ...this.state,error: err,isLoaded: true })});
+        });
     }
 
     handleEdit = (prod) => {
@@ -32,7 +39,16 @@ class UserListado extends React.Component{
     }
 
     componentDidMount(){
-        fetch("https://arq1-meli-grupo-e.herokuapp.com/products/" +localStorage.getItem("user")).then(res => res.json())
+        if(getAuth().currentUser == null){
+            alert("Su sesión expiró, vuelva a identificarse")
+            return;
+        }
+        getAuth().currentUser.getIdToken(true).then((idToken) => {
+            const requestOptions = {
+                method: 'GET',
+                headers: {'Authorization' : "Bearer " + idToken}
+            };
+            fetch("https://arq1-meli-grupo-e.herokuapp.com/products/" +localStorage.getItem("user"),requestOptions).then(res => res.json())
         .then(
             (result) => {
                 console.log(result);
@@ -48,6 +64,8 @@ class UserListado extends React.Component{
                 });
             }
         )
+        });
+        
     }
 
     render(){
@@ -58,23 +76,27 @@ class UserListado extends React.Component{
       return <div>Cargando...</div>;
     } else {
       return (
-          <div>
-          {this.state.items.map(item => (
-            <div key={item._id} className="product-card">
-              <div className="product-image"><img src={item.photo} height="100px"/></div>
-              <div className="product-content">
-              <h2>{item.nombre}</h2>
-              <p>{item.descripcion}</p>
-              $ {item.valor}
-                </div>  
-                <div className="footer">
-                    <button title="Borrar" onClick={() => {this.handleDelete(item._id)}}>Eliminar</button>   
-                    <br/>
-                    <button title="Editar" onClick={() => {this.handleEdit(item)}}>Editar</button> 
-                </div>
-            </div>
-          ))}
-          </div>
+        <Container fluid="lg" style={{padding: '1%'}}>
+        <Row>
+        {items.map(item => (
+          <Col key={item._id}>
+          <Card  style={{ width: '18rem', height: '500px'}}>
+          <Card.Img variant="top" src={item.photo} />
+          <Card.Body>
+            <Card.Title>{item.nombre}</Card.Title>
+            <Card.Text>
+            {item.descripcion}
+            </Card.Text>
+          </Card.Body>
+          <Card.Text>$ {item.valor}</Card.Text>
+          <Card.Link onClick={() => {this.handleDelete(item._id)}}>Eliminar</Card.Link>
+        <Card.Link onClick={() => {this.handleEdit(item)}}>Editar</Card.Link>
+        </Card>
+        </Col>
+         
+        ))}
+        </Row>
+      </Container>
       );
     }
   }

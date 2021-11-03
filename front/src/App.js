@@ -5,8 +5,8 @@ import Header from './header/Header';
 import './App.css';
 import RegistrarUsuario from './registerUser/RegistrarUsuario';
 import Login from './login/Login';
-import app from './firebase';
 import UserListado from './productosUsuario/UserListado';
+import { getAuth } from '@firebase/auth';
 
 
 class App extends React.Component {
@@ -14,13 +14,24 @@ class App extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-        screen: 'login'
+        screen: 'list'
     }
 
 }
 
-  componentDidMount = () => {
-    app();
+  componentDidUpdate(){
+    console.log(getAuth().currentUser)
+    if(getAuth().currentUser == null){
+      localStorage.clear();
+    }
+  }
+
+  handleSearchCategory = (category) => {
+    this.setState({screen: 'list',category:category})
+  }
+
+  handleSearchProduct = (text) => {
+    this.setState({screen: 'list',searchText: text})
   }
 
   handleProductCreation = () => {
@@ -29,6 +40,10 @@ class App extends React.Component {
 
   handleLogin = () =>{
     this.setState({screen: 'list'})
+  }
+
+  handleUserLogin = () =>{
+    this.setState({screen: 'login'})
   }
 
   handleCreationScreen = () => {
@@ -52,9 +67,6 @@ class App extends React.Component {
   }
 
   render(){
-    if(this.state.screen === 'login' && localStorage.getItem("user") !== null){
-      this.setState({screen: "list"});
-    }
     let mainContent;
     switch(this.state.screen){
       case 'createProduct':
@@ -64,7 +76,7 @@ class App extends React.Component {
         mainContent = <RegistrarUsuario onUserCreated={this.handleHomeScreen}/>;
         break
       case 'list':
-        mainContent = <Listado/>;
+        mainContent = <Listado search={this.state.searchText} category={this.state.category}/>;
         break
       case 'userProducts':
         mainContent = <UserListado onProductEdit={this.handleProductEdit}/>;
@@ -79,7 +91,8 @@ class App extends React.Component {
     }
     return (
     <div className="App" data-testid="App">
-      <Header onProductCreationEvent={this.handleCreationScreen} onHome={this.handleHomeScreen} onRegister={this.handleRegisterScreen} onUserProducts={this.handleUserProductsScreen}/>
+      <Header onProductCreationEvent={this.handleCreationScreen} onLogin={this.handleUserLogin} onHome={this.handleHomeScreen} onRegister={this.handleRegisterScreen} onUserProducts={this.handleUserProductsScreen}
+      onCategory={this.handleSearchCategory} onSearchProduct={this.handleSearchProduct}/>
       {mainContent}
 
     </div>

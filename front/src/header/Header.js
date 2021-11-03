@@ -2,8 +2,30 @@ import React from 'react';
 import './Header.css';
 import logo from '../ml.png';
 import search from '../lupa.png';
+import {Nav,Navbar,NavDropdown,Container, Button,Form,FormControl} from 'react-bootstrap';
+
 
 class CrearProducto extends React.Component{
+
+  constructor(props){
+    super(props);
+    this.state = {searchTxt: ""}
+    this.handleSearchChanged = this.handleSearchChanged.bind(this);
+  }
+
+  handleSearchChanged(event){
+    this.setState({searchTxt: event.target.value});
+  }
+
+  openCategory = (event) =>{
+    console.log(event.target.name);
+    this.props.onCategory(event.target.name);
+  }
+
+  searchProduct = () => {
+    console.log(this.state.searchTxt);
+    this.props.onSearchProduct(this.state.searchTxt);
+  }
 
     goToCreation = () =>{
       this.props.onProductCreationEvent();
@@ -11,6 +33,10 @@ class CrearProducto extends React.Component{
 
     goHome = () => {
       this.props.onHome();
+    }
+
+    handleLogin = () => {
+      this.props.onLogin();
     }
 
     goToRegister = () =>{
@@ -29,54 +55,73 @@ class CrearProducto extends React.Component{
     render(){
       let userId = localStorage.getItem("user");
       let username = localStorage.getItem("username");
+      let seller = localStorage.getItem("seller") === "true";
       let crearProducto;
       let misProductos;
-      let registerOrSignOut = <div className="nav-option" onClick={this.goToRegister}>Registrarme</div>;
+      let registerOrSignOut = <Nav>
+        <Nav.Link onClick={this.handleLogin}> Iniciar sesión </Nav.Link>
+        <Nav.Link onClick={this.goToRegister}>Registrarme</Nav.Link>
+      </Nav>;
       if(userId !== null){
-        registerOrSignOut = <div className="nav-option" onClick={this.signOut}>{username} ,Salir</div>;
-        crearProducto = <li>
-        <div class="nav-option" onClick={this.goToCreation}>Publicar</div>
-      </li>;
-      misProductos = <li><div class="nav-option" onClick={this.goToUserProducts}>Mis productos</div></li>
+        registerOrSignOut = <Nav><Nav.Link onClick={this.signOut}>{username} ,Salir</Nav.Link></Nav>;
+        if(seller){
+        crearProducto = <Nav.Link onClick={this.goToCreation}>Publicar</Nav.Link>;
+        misProductos = <Nav.Link onClick={this.goToUserProducts}>Mis productos</Nav.Link>
+
+        }
       }
-        return(<header className="site-header">
-        <div className="logo">
-          <a href="/">
-            <img className="logoImg" src={logo} alt="MercadoTrucho"/>
-          
-          <b>MercadoTrucho</b>
-          </a>
-        </div>
-        <div className="header-middle-area">
-          <nav className="main-nav" id="main-nav">
-            <ul>
-              <li>
-              <div className="nav-option" onClick={this.goHome}>Home</div>
-              </li>
-              <li>
-                <div className="nav-option">Categorias</div>
-              </li>
-              <li>
-              <div className="nav-option">Más vendidos</div>
-              </li>
-              {crearProducto}
-              {misProductos}
-            </ul>
-          </nav>
-        </div>
-        <nav className="search-and-account">
-          <ul>
-            <li>
-              <img src={search} className="search-img" alt="Buscar"></img>
-            </li>
-            <li>
-            {registerOrSignOut}
-            </li>
-          </ul>
-            
-            
-        </nav>
-      </header>)
+        return(
+          <Navbar variant="dark" bg="dark" expand="lg">
+  <Container fluid>
+      <Navbar.Brand href="/">
+        <img
+          alt="mtLogo"
+          src={logo}
+          width="30"
+          height="30"
+          className="d-inline-block align-top"
+        />{' '}
+      MercadoTrucho
+      </Navbar.Brand>
+    <Navbar.Toggle aria-controls="navbar-dark-example" />
+    <Navbar.Collapse id="navbar-dark-example">
+      <Nav>
+        <Nav.Link>Más vendidos</Nav.Link>
+        {crearProducto}
+        {misProductos}
+        <NavDropdown
+          id="nav-dropdown-dark-example"
+          title="Categorías"
+          menuVariant="dark"
+        >
+          <NavDropdown.Item name="Agro" onClick={this.openCategory}>Agro</NavDropdown.Item>
+          <NavDropdown.Item name="Alimentos" onClick={this.openCategory}>Alimentos</NavDropdown.Item>
+          <NavDropdown.Item name="Arte" onClick={this.openCategory}>Arte</NavDropdown.Item>
+          <NavDropdown.Item name="Colleciones" onClick={this.openCategory}>Colecciones</NavDropdown.Item>
+          <NavDropdown.Item name="Deportes" onClick={this.openCategory}>Deportes</NavDropdown.Item>
+          <NavDropdown.Item name="Inmuebles" onClick={this.openCategory}>Inmuebles</NavDropdown.Item>
+          <NavDropdown.Item name="Mascotas" onClick={this.openCategory}>Mascotas</NavDropdown.Item>
+          <NavDropdown.Item name="Tecnologia" onClick={this.openCategory}>Técnologia</NavDropdown.Item>
+          <NavDropdown.Item name="Vehiculos" onClick={this.openCategory}>Vehículos</NavDropdown.Item>
+          <NavDropdown.Item name="Vestimenta" onClick={this.openCategory}>Vestimenta</NavDropdown.Item>
+
+        </NavDropdown>
+      </Nav>
+      <Form className="d-flex">
+        <FormControl
+          type="search"
+          placeholder="Buscar"
+          className="me-2"
+          aria-label="Search"
+          onChange={this.handleSearchChanged}
+        />
+        <Button variant="outline-success" onClick={this.searchProduct}>Buscar</Button>
+      </Form>
+      {registerOrSignOut}
+    </Navbar.Collapse>
+  </Container>
+</Navbar>
+      )
     }
 }
 export default CrearProducto;
