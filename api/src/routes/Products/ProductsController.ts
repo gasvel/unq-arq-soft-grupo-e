@@ -6,7 +6,7 @@ import ValidateAuthService from "../ValidateAuthService"
 
 
 export const createProduct: RequestHandler = async (req, res) => {
-    let uid = ValidateAuthService.validateAuth(req,res)
+    let uid = await ValidateAuthService.validateAuth(req,res)
     if(!uid){
         return res.status(403).json({message: "Unauthorized"})
     }
@@ -74,7 +74,7 @@ export const getCategories: RequestHandler = async (req, res) => {
 }
 
 export const deleteProduct: RequestHandler = async (req, res) => {
-    let uid = ValidateAuthService.validateAuth(req,res)
+    let uid = await ValidateAuthService.validateAuth(req,res)
     if(!uid){
         return res.status(403).json({message: "Unauthorized"})
     }
@@ -84,7 +84,7 @@ export const deleteProduct: RequestHandler = async (req, res) => {
 }
 
 export const updateProduct: RequestHandler = async (req, res) => {
-    let uid = ValidateAuthService.validateAuth(req,res)
+    let uid = await ValidateAuthService.validateAuth(req,res)
     if(!uid){
         return res.status(403).json({message: "Unauthorized"})
     }

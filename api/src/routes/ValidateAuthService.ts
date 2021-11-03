@@ -1,19 +1,16 @@
 import admin from "../firebaseAdmin";
 
 class ValidateAuthService {
-    validateAuth = (req,res) =>{
+    validateAuth = async (req,res) =>{
         const bearerHeader = req.headers['authorization'];
     
         if (bearerHeader) {
           const bearer = bearerHeader.split(' ');
           const bearerToken = bearer[1];
-          admin.auth().verifyIdToken(bearerToken)
-          .then((decodedToken) => {
-            return decodedToken.uid;
-          })
-          .catch((error) => {
-            return null
-          });
+          console.log(bearerToken)
+          let user = await admin.auth().verifyIdToken(bearerToken)
+          return user.uid
+          
         } else {
           // Forbidden
           return null
