@@ -1,4 +1,6 @@
 import React from 'react';
+import {Card,Container,Row,Col} from 'react-bootstrap';
+
 class Listado extends React.Component{
     constructor(props){
         super(props);
@@ -9,8 +11,50 @@ class Listado extends React.Component{
         }
     }
 
+
+    getSnapshotBeforeUpdate(prevProps) {
+      return { notifyRequired: prevProps.search !== this.props.search || prevProps.category !== this.props.category };
+    }
+    
+    componentDidUpdate(prevProps, prevState, snapshot) {
+      if (snapshot.notifyRequired) {
+      let params = []
+      if(this.props.category != null){
+        params.push("categoria="+this.props.category)
+      }
+      if(this.props.search != null){
+        params.push("nombre="+this.props.search)
+      }
+      if(params.length > 0){
+        params = params.join('&');
+        this.getProducts(params)
+      }
+      }
+    }
+
+
     componentDidMount(){
-        fetch("https://arq1-meli-grupo-e.herokuapp.com/products").then(res => res.json())
+      let params = []
+      if(this.props.category != null){
+        params.push("categoria="+this.props.category)
+      }
+      if(this.props.search != null){
+        params.push("nombre="+this.props.search)
+      }
+      if(params.length > 0){
+        params = params.join('&');
+        this.getProducts(params)
+      }
+      this.getProducts();
+    }
+
+    getProducts(params){
+      let filter = "";
+      if(params){
+        filter = "?"+params;
+      }
+      console.log(filter);
+      fetch("https://arq1-meli-grupo-e.herokuapp.com/products" + filter).then(res => res.json())
         .then(
             (result) => {
                 console.log(result);
@@ -36,18 +80,25 @@ class Listado extends React.Component{
       return <div>Cargando...</div>;
     } else {
       return (
-        <div>
+        <Container fluid="lg" style={{padding: '1%'}}>
+          <Row>
           {items.map(item => (
-            <div key={item._id} className="product-card">
-              <div className="product-image"><img src={item.photo} height="100px"/></div>
-              <div className="product-content">
-              <h2>{item.nombre}</h2>
-              <p>{item.descripcion}</p>
-              $ {item.valor}
-                </div>  
-            </div>
+            <Col key={item._id}>
+            <Card  style={{ width: '18rem', height: '500px'}}>
+            <Card.Img variant="top" src={item.photo} />
+            <Card.Body>
+              <Card.Title>{item.nombre}</Card.Title>
+              <Card.Text>
+              {item.descripcion}
+              </Card.Text>
+            </Card.Body>
+            <Card.Text>$ {item.valor}</Card.Text>
+          </Card>
+          </Col>
+           
           ))}
-        </div>
+          </Row>
+        </Container>
       );
     }
   }

@@ -1,7 +1,7 @@
 import React from 'react';
 import './RegistrarUsuario.css';
-import AES from 'crypto-js/aes';
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "@firebase/auth";
+import Button from 'react-bootstrap/Button';
 
 
 class RegistrarUsuario extends React.Component{
@@ -10,15 +10,17 @@ class RegistrarUsuario extends React.Component{
         this.state = {
             error: null,
             isLoaded: true,
+            screen: 'auth',
+            token: null,
             user: {
                 nombre:"",
                 apellido:"",
                 username:"",
-                password:"",
                 seller:false,
                 email:"",
                 razonSocial:"",
-                emailCorporativo:""
+                emailCorporativo:"",
+                uid: ""
 
             }
         }
@@ -35,11 +37,12 @@ class RegistrarUsuario extends React.Component{
         .then((result) => {
             // This gives you a Google Access Token. You can use it to access the Google API.
             const credential = GoogleAuthProvider.credentialFromResult(result);
-            const token = credential.accessToken;
             // The signed-in user info.
             const user = result.user;
-            console.log(JSON.stringify(user));
-            console.log(token);
+            user.getIdToken(true).then((idToken) => {
+                this.setState({...this.state, token : idToken,screen: "form", user: {...this.state.user,uid: user.uid, nombre: user.displayName.split(' ')[0],email: user.email}})
+
+            })
             // ...
         }).catch((error) => {
             // Handle Errors here.
@@ -73,17 +76,18 @@ class RegistrarUsuario extends React.Component{
         this.setState({ ...this.state,isLoaded: false })
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' ,'Access-Control-Allow-Origin':'http://localhost:3000'},
-            body: JSON.stringify(this.state.user.map((k,v) => {if(k==="password"){return AES.encrypt(v,'es un secreto').toString();}return v;}))
+            headers: { 'Content-Type': 'application/json' ,'Access-Control-Allow-Origin':'http://localhost:3000',
+                        'Authorization': 'Bearer ' + this.state.token
+        },
+            body: JSON.stringify(this.state.user)
         };
         fetch('https://arq1-meli-grupo-e.herokuapp.com/users', requestOptions)
             .then(data => {
-                console.log(data);
+                console.log(data.status);
                 this.setState({ user: {
                     nombre:"",
                     apellido:"",
                     username:"",
-                    password:"",
                     seller:false,
                     email:"",
                     razonSocial:"",
@@ -92,6 +96,15 @@ class RegistrarUsuario extends React.Component{
                 },error: null,isLoaded: true });
                 if(data.status === 200){
                     this.props.onUserCreated();
+                }
+                else if(data.status === 403){
+                    alert("Error en la autenticación");
+                }
+                else if(data.status === 303){
+                    alert("Usuario ya registrado");
+                }
+                else if(data.status === 400){
+                    alert("Error en el ingreso de campos")
                 }
                 else{
                     alert("Ocurrió un error en el registro. Por favor intente nuevamente: " + data.statusText);
@@ -123,7 +136,7 @@ class RegistrarUsuario extends React.Component{
                 {auth.displayName}
             </div>
         }
-        if(user.esVendedor){
+        if(user.seller){
             camposVendedor = <div>
                 <div className="form-field">
                         <label>
@@ -143,10 +156,11 @@ class RegistrarUsuario extends React.Component{
         return <div>Error: {error.message}</div>;
         } else if (!isLoaded) {
         return <div>Cargando...</div>;
-        } else {
+        } else if(this.state.screen === "auth"){
+            return(<Button onClick={this.handleGoogleSignIn}>Registrarme con Google</Button>)
+        }else{
         return (
             <div className="product-form">
-                <button className="google-sign-in-btn" onClick={this.handleGoogleSignIn}>Registrarme con mi cuenta de Google</button>
                 <form onSubmit={this.handleSubmit}>
                     <div className="form-field">
                         <label>
@@ -170,12 +184,6 @@ class RegistrarUsuario extends React.Component{
                         <label>
                             Mail:
                             <input name="email" type="email" value={user.email} onChange={this.handleFieldChange}></input>
-                        </label>
-                    </div>
-                    <div className="form-field">
-                        <label>
-                            Contraseña:
-                            <input name="password" type="password" value={user.password} onChange={this.handleFieldChange}></input>
                         </label>
                     </div>
                     <div className="form-field">

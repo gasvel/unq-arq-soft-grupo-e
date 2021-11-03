@@ -1,11 +1,16 @@
 import React from 'react';
 import './CrearProducto.css';
-import UploadFile from '../uploadFile/UploadFile';
+import { getAuth } from "@firebase/auth";
+import {uploadBytes,getDownloadURL ,ref as sRef } from "firebase/storage";
+import db from '../firebase';
+
+
 
 class CrearProducto extends React.Component{
     constructor(props){
         super(props);
         this.state = {
+            previewImg: null,
             error: null,
             isLoaded: true,
             product: {
@@ -16,13 +21,31 @@ class CrearProducto extends React.Component{
                 categoria: "Agro"
             }
         }
-        console.log(this.props.product);
+        this.fileInput = React.createRef();
+      this.handleFileSelection = this.handleFileSelection.bind(this)
         if(this.props.product){
             this.state ={...this.state, product: this.props.product};
         }
         this.handleFieldChange = this.handleFieldChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleImgUploaded = this.handleImgUploaded.bind(this);
+    }
+
+    handleFileSelection(event){
+        let previewURL = URL.createObjectURL(event.target.files[0]);
+        this.setState({previewImg: previewURL});
+      }
+
+    submitPhoto() {
+        let userId = localStorage.getItem("user");
+        let pathUrl = userId + new Date().getTime() +".jpg";
+        const stRef = sRef(db,pathUrl);
+      return uploadBytes(stRef, this.fileInput.current.files[0]).then((snapshot) => {
+          getDownloadURL(snapshot.ref).then((downloadURL) => {
+              console.log(downloadURL);
+              this.setState({...this.state,product: {...this.state.product,photo: downloadURL}})
+              this.createUser();
+          });
+        });
     }
 
     handleFieldChange(event) {
@@ -39,64 +62,75 @@ class CrearProducto extends React.Component{
         });
       }
 
-      handleImgUploaded(url){
-          this.setState( {...this.state,
-            product:{
-              ...this.state.product,photo: url
-          }
-        }
-        );
-        
-      }
-
-      handleSubmit(event) {
-        event.preventDefault();
+      createUser() {
         let userId = localStorage.getItem("user");
         if(!this.state.product.photo){
             alert("Debe cargar una imagen del producto para poder publicarlo.");
             return;
         }
-        let product = {...this.state.product,owner: userId};
-        this.setState({ ...this.state,isLoaded: false })
-        const requestOptions = this.state.product._id ? {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(product)
-        } : {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(product)
-        };
 
-        let url = 'https://arq1-meli-grupo-e.herokuapp.com/products';
-        if(this.state.product._id){
-            url = url + '/' + this.state.product._id
-        }
-        fetch(url, requestOptions)
-            .then(data => {
-                console.log(data);
-                this.setState({ product:{
+        let product = {...this.state.product,owner: userId};
+        
+        getAuth().currentUser.getIdToken(true).then((idToken) => {
+            const requestOptions = this.state.product._id ? {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + idToken },
+                body: JSON.stringify(product)
+            } : {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + idToken },
+                body: JSON.stringify(product)
+            };
+    
+            let url = 'https://arq1-meli-grupo-e.herokuapp.com/products';
+            if(this.state.product._id){
+                url = url + '/' + this.state.product._id
+            }
+            fetch(url, requestOptions)
+                .then(data => {
+                    console.log(data);
+                    this.setState({ product:{
+                        nombre: "",
+                        descripcion: "",
+                        valor: 0,
+                        stock: 1,
+                        categoria: "Agro"
+                        
+                    },error: null,isLoaded: true });
+                    this.props.onProductCreated();
+                
+                })
+                .catch(err => {this.setState({ product:{
                     nombre: "",
                     descripcion: "",
                     valor: 0,
                     stock: 1,
                     categoria: "Agro"
-                    
-                },error: null,isLoaded: true });
-                this.props.onProductCreated();
-            
-            })
-            .catch(err => {this.setState({ product:{
-                nombre: "",
-                descripcion: "",
-                valor: 0,
-                stock: 1,
-                categoria: "Agro"
-            },error: err,isLoaded: true })});
+                },error: err,isLoaded: true })});
+        })
+        
+      }
+
+      handleSubmit(event) {
+        event.preventDefault();
+        if(getAuth().currentUser == null){
+            alert("Su sesión expiró, vuelva a identificarse")
+            return;
+        }
+        this.setState({ ...this.state,isLoaded: false })
+        if(!this.state.product.photo){
+        this.submitPhoto();
+        }
+        else{
+            this.createUser();
+        }
       }
 
     render(){
         const { error, isLoaded } = this.state;
+        let preview=this.state.product.photo ? <img src={this.state.product.photo} className="imgPreview" alt="ProductImg"/> : this.state.previewImg != null ? <img src={this.state.previewImg} className="imgPreview" alt="ProductImg"/> : <span/>; ;
         let btnMsg = this.state.product._id ? "Actualizar" : "Crear producto";
         if (error) {
         return <div>Error: {error.message}</div>;
@@ -105,7 +139,13 @@ class CrearProducto extends React.Component{
         } else {
         return (
             <div className="product-form">
-                <UploadFile onImageUploaded={this.handleImgUploaded} preview={this.state.product.photo}/>
+                <div className="imgSection">
+                {preview}
+                </div>
+                <label>
+                    Selecciona una foto del producto:  
+                    <input type="file" accept="image/jpeg" ref={this.fileInput} onChange={this.handleFileSelection}/>
+                </label>
                 <form onSubmit={this.handleSubmit}>
                     <div className="form-field">
                         <label>
@@ -145,7 +185,7 @@ class CrearProducto extends React.Component{
                                     Arte
                                 </option>
                                 <option value="Colleciones">
-                                    Coleciones
+                                    Colecciones
                                 </option>
                                 <option value="Deportes">
                                     Deportes

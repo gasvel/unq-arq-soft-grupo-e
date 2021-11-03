@@ -1,4 +1,4 @@
-.site-header{
+.site-header {
     position: relative;
     z-index: 2;
     display: flex;
@@ -10,52 +10,55 @@
     --fleck-color-1: #262626;
     background-color: #fff159;
     background-image: paint(fleck);
-  }
-  
-  .site-header .logo, .site-header .logo>a {
+}
+
+.site-header .logo,
+.site-header .logo>a {
     display: flex;
     align-items: center;
-  }
-  
-  .site-header .logo {
-      transition: 0s;
-      flex: 0;
-      position: relative;
-      align-self: stretch;
-  }
-  
-  .site-header .header-middle-area {
+}
+
+.site-header .logo {
+    transition: 0s;
+    flex: 0;
+    position: relative;
+    align-self: stretch;
+}
+
+.site-header .header-middle-area {
     flex: 1;
     width: 100%;
-  }
-  
-  .site-header .main-nav>ul {
+}
+
+.site-header .main-nav>ul {
     display: flex;
     height: 100%;
     align-items: center;
-  }
-  
-  .site-header .logo, .site-header .logo>a {
+}
+
+.site-header .logo,
+.site-header .logo>a {
     display: flex;
     align-items: center;
-  }
-  
-  .site-header .logoImg{
+}
+
+.site-header .logoImg {
     height: 35px;
-  }
-  
-  nav ol, nav ul {
+}
+
+nav ol,
+nav ul {
     list-style: none;
     list-style-image: none;
-  }
-  
-  li {
+}
+
+li {
     display: list-item;
     text-align: -webkit-match-parent;
-  }
-  
-  .site-header .main-nav>ul>li .nav-option {
-    font-family: MD Primer Bold,Rubik,Lato,Lucida Grande,Lucida Sans Unicode,Tahoma,Sans-Serif;
+}
+
+.site-header .main-nav>ul>li .nav-option {
+    font-family: MD Primer Bold, Rubik, Lato, Lucida Grande, Lucida Sans Unicode, Tahoma, Sans-Serif;
     font-style: normal;
     font-weight: 700;
     text-transform: uppercase;
@@ -72,21 +75,21 @@
     text-align: center;
     overflow: hidden;
     cursor: pointer;
-  }
-  
-  a {
+}
+
+a {
     text-decoration: none;
-  }
-  
-  .site-header .search-and-account {
+}
+
+.site-header .search-and-account {
     z-index: 15;
     right: var(--gap);
     align-items: center;
-  }
-  
-  .site-header .search-and-account>ul>li .nav-option {
+}
+
+.site-header .search-and-account>ul>li .nav-option {
     align-items: center;
-    font-family: MD Primer Bold,Rubik,Lato,Lucida Grande,Lucida Sans Unicode,Tahoma,Sans-Serif;
+    font-family: MD Primer Bold, Rubik, Lato, Lucida Grande, Lucida Sans Unicode, Tahoma, Sans-Serif;
     font-style: normal;
     font-weight: 700;
     text-transform: uppercase;
@@ -102,16 +105,36 @@
     text-align: center;
     overflow: hidden;
     cursor: pointer;
-  }
-  
-  .site-header .search-and-account>ul {
+}
+
+.site-header .search-and-account>ul>span>li .nav-option {
+    align-items: center;
+    font-family: MD Primer Bold, Rubik, Lato, Lucida Grande, Lucida Sans Unicode, Tahoma, Sans-Serif;
+    font-style: normal;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-weight: 500;
+    font-size: .8rem;
+    height: 100%;
+    color: #262626;
+    padding: 1.2rem 1rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.site-header .search-and-account>ul {
     display: flex;
     height: 100%;
     align-items: center;
     list-style: none;
     list-style-image: none;
-  }
-  
-  .search-img{
+}
+
+.search-img {
     height: 35px;
-  }
+}
