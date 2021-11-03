@@ -17,10 +17,6 @@ const userSchema = new Schema({
         unique: true,
         trim: true
     },
-    password:{
-        type: String,
-        required: true
-    },
     seller:{
         type: Boolean,
         required: true

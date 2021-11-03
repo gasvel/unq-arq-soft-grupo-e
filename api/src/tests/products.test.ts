@@ -13,7 +13,6 @@ describe('create product', () => {
             nombre: 'cambia nombre opa',
             apellido: 'apellido test',
             username: 'username1',
-            password: 'password1',
             seller: true,
             email: 'email1',
             razonSocial: '12',
