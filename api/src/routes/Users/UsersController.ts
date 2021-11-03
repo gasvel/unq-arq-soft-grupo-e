@@ -31,7 +31,7 @@ export const createUser: RequestHandler = async (req, res) => {
 
  export const getUser: RequestHandler = async (req, res) => {
     let uidToken = ValidateAuthService.validateAuth(req,res)
-    if(!uid){
+    if(!uidToken){
         return res.status(403).json({message: "Unauthorized"})
     }
     const userFound = await User.findOne({uid : uidToken})
