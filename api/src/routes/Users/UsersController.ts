@@ -3,7 +3,7 @@ import ValidateAuthService from "../ValidateAuthService"
 import User from './User'
 
 export const createUser: RequestHandler = async (req, res) => {
-    let uid = ValidateAuthService.validateAuth(req,res)
+    let uid = await ValidateAuthService.validateAuth(req,res)
     if(!uid){
         return res.status(403).json({message: "Unauthorized"})
     }
@@ -30,7 +30,7 @@ export const createUser: RequestHandler = async (req, res) => {
  }
 
  export const getUser: RequestHandler = async (req, res) => {
-    let uidToken = ValidateAuthService.validateAuth(req,res)
+    let uidToken = await ValidateAuthService.validateAuth(req,res)
     if(!uidToken){
         return res.status(403).json({message: "Unauthorized"})
     }
@@ -40,7 +40,7 @@ export const createUser: RequestHandler = async (req, res) => {
 }
 
 export const getUsers: RequestHandler = async (req, res) => {
-    let uid = ValidateAuthService.validateAuth(req,res)
+    let uid = await ValidateAuthService.validateAuth(req,res)
     if(!uid){
         return res.status(403).json({message: "Unauthorized"})
     }
@@ -55,7 +55,7 @@ export const getUsers: RequestHandler = async (req, res) => {
 }
 
 export const deleteUser: RequestHandler = async (req, res) => {
-    let uid = ValidateAuthService.validateAuth(req,res)
+    let uid = await ValidateAuthService.validateAuth(req,res)
     if(!uid){
         return res.status(403).json({message: "Unauthorized"})
     }
@@ -65,7 +65,7 @@ export const deleteUser: RequestHandler = async (req, res) => {
 }
 
 export const updateUser: RequestHandler = async (req, res) => {
-    let uid = ValidateAuthService.validateAuth(req,res)
+    let uid = await ValidateAuthService.validateAuth(req,res)
     if(!uid){
         return res.status(403).json({message: "Unauthorized"})
     }
