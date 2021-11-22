@@ -42,7 +42,7 @@ export const getSale: RequestHandler = async (req, res) => {
     if(!uid){
         return res.status(403).json({message: "Unauthorized"})
     }
-    const saleFound = await Sale.findById(req.params.id)
+    const saleFound = await Sale.findById(req.params.id).populate('buyer').populate('seller').populate('wrapperProduct')
     if (!saleFound) return res.status(404).json({message: 'Sale not found'})
     return res.json(saleFound)
 }
