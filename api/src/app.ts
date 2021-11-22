@@ -4,6 +4,7 @@ import cors from 'cors'
 import config from './config';
 import productsRoutes from './routes/Products/ProductsRoutes'
 import userRoutes from './routes/Users/UsersRoutes'
+import salesRotes from './routes/Sales/SalesRoutes'
 
 const app = express()
 
@@ -16,5 +17,6 @@ app.use(express.urlencoded({extended: false}));
 
 app.use(productsRoutes);
 app.use(userRoutes);
+app.use(salesRotes);
 
 export default app;

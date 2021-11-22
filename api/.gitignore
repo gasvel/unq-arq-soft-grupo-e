@@ -2,4 +2,5 @@ build
 node_modules
 products.http
 users.http
+sales.http
 .env
