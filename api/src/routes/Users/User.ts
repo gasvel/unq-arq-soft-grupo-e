@@ -37,6 +37,10 @@ const userSchema = new Schema({
         unique: true,
         trim: true
     },
+    wallet:{
+        type: Number, 
+        default: 0
+    },
     uid:{
         type:String,
         required: true,
