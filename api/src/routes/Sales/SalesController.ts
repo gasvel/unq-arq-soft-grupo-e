@@ -6,7 +6,10 @@ import Sale from "./Sales"
 import ValidateAuthService from "../ValidateAuthService"
 
 export const createSale: RequestHandler = async (req, res) => {
-
+    let uid = await ValidateAuthService.validateAuth(req,res)
+    if(!uid){
+        return res.status(403).json({message: "Unauthorized"})
+    }
     if(!req.body.formaPago || !req.body.product || !req.body.buyer || !req.body.taxes)
         return res.status(400).json({message: 'Missing required field, check formaPago product buyer and taxes should not be empty.'})
    
