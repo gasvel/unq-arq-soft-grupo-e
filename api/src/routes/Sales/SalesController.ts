@@ -14,10 +14,10 @@ export const createSale: RequestHandler = async (req, res) => {
         return res.status(400).json({message: 'Missing required field, check formaPago product buyer and taxes should not be empty.'})
    
     const buyerExists = await User.findById(req.body.buyer)
-    const productExists = await Product.findById(req.body.product)
+    let productExists = await Product.findById(req.body.product)
    
-    if(!buyerExists || !productExists)
-        return res.status(400).json({message: 'Buyer or product does not exist for this sale.'})
+    if(!buyerExists || !productExists || productExists.get('stock') <= 0)
+        return res.status(400).json({message: 'Buyer or product does not exist for this sale or product is out of stock.'})
 
     const sellerExists = await User.findById(productExists.get('owner'))
     if(!sellerExists || !sellerExists.get('seller'))
@@ -34,6 +34,8 @@ export const createSale: RequestHandler = async (req, res) => {
     sale.set({ wrapperProduct: savedWrapperProd.get('_id') })
     sale.set({ seller: productExists.get('owner') })
     const savedSale = await sale.save()
+    productExists.set({ stock: productExists.get('stock') - 1 })
+    await productExists.save()
     res.json(savedSale)
 }
 

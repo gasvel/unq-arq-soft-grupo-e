@@ -14,12 +14,12 @@ const productSchema = new Schema({
     valor:{
         type: Number,
         required: true,
-        min: [1, 'Minimum value is 1.']
+        min: [1, 'Minimum value for valor is 1.']
     },
     stock:{
         type: Number,
         required: true,
-        min: [1, 'Minimum value is 1.']
+        min: [0, 'Minimum value for stock is 0.']
     },
     owner:{
         type: Schema.Types.ObjectId,
