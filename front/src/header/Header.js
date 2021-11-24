@@ -48,8 +48,12 @@ class CrearProducto extends React.Component{
       this.props.onUserProducts();
     }
 
+    goToUserSales = () =>{
+      this.props.onUserSales();
+    }
+
     signOut = () =>{
-      localStorage.removeItem("user");
+      localStorage.clear();
       this.goHome();
     }
 
@@ -59,6 +63,7 @@ class CrearProducto extends React.Component{
       let seller = localStorage.getItem("seller") === "true";
       let crearProducto;
       let misProductos;
+      let misVentas;
       let registerOrSignOut = <Nav>
         <Nav.Link onClick={this.handleLogin}> Iniciar sesión </Nav.Link>
         <Nav.Link onClick={this.goToRegister}>Registrarme</Nav.Link>
@@ -68,13 +73,13 @@ class CrearProducto extends React.Component{
         if(seller){
         crearProducto = <Nav.Link onClick={this.goToCreation}>Publicar</Nav.Link>;
         misProductos = <Nav.Link onClick={this.goToUserProducts}>Mis productos</Nav.Link>
-
+        misVentas = <Nav.Link onClick={this.goToUserSales}>Mis ventas</Nav.Link>
         }
       }
         return(
           <Navbar variant="dark" bg="dark" expand="lg">
   <Container fluid>
-      <Navbar.Brand href="/">
+      <Navbar.Brand href="">
         <img
           alt="mtLogo"
           src={logo}
@@ -90,6 +95,7 @@ class CrearProducto extends React.Component{
         <Nav.Link>Más vendidos</Nav.Link>
         {crearProducto}
         {misProductos}
+        {misVentas}
         <NavDropdown
           id="nav-dropdown-dark-example"
           title="Categorías"

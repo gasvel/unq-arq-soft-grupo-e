@@ -8,6 +8,7 @@ import Login from './login/Login';
 import UserListado from './productosUsuario/UserListado';
 import { getAuth } from '@firebase/auth';
 import InfoProducto from './infoProducto/InfoProducto';
+import VentasUser from './ventasUser/VentasUser';
 
 
 class App extends React.Component {
@@ -69,6 +70,10 @@ class App extends React.Component {
     this.setState({screen: 'userProducts'});
   }
 
+  handleUserSales = () => {
+    this.setState({screen: 'userSales'});
+  }
+
   render(){
     let mainContent;
     switch(this.state.screen){
@@ -90,6 +95,9 @@ class App extends React.Component {
       case 'productInfo':
         mainContent = <InfoProducto productId={this.state.product} onSellCreated={this.handleSellCreated}/>
         break;
+      case 'userSales':
+        mainContent = <VentasUser/>
+        break;
       default:
         mainContent = <Login onUserLogin={this.handleLogin}/>;
         break;
@@ -98,7 +106,7 @@ class App extends React.Component {
     return (
     <div className="App" data-testid="App">
       <Header onProductCreationEvent={this.handleCreationScreen} onLogin={this.handleUserLogin} onHome={this.handleHomeScreen} onRegister={this.handleRegisterScreen} onUserProducts={this.handleUserProductsScreen}
-      onCategory={this.handleSearchCategory} onSearchProduct={this.handleSearchProduct}/>
+      onCategory={this.handleSearchCategory} onSearchProduct={this.handleSearchProduct} onUserSales={this.handleUserSales}/>
       {mainContent}
 
     </div>
