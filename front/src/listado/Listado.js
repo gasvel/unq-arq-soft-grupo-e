@@ -11,8 +11,30 @@ class Listado extends React.Component{
             gte:0,lte:0
         }
         this.filterProducts = this.filterProducts.bind(this);
+        this.handleChangeGte = this.handleChangeGte.bind(this);
+        this.handleChangeLte = this.handleChangeLte.bind(this);
     }
 
+
+    handleChangeGte(event) {
+      const target = event.target;
+      let value =parseInt(target.value);
+  
+      this.setState({
+          ...this.state,gte:value
+      });
+    }
+
+    handleChangeLte(event) {
+      const target = event.target;
+      let val =parseInt(target.value);
+  
+      this.setState({
+          ...this.state,
+          lte:val
+        
+      });
+    }
 
     getSnapshotBeforeUpdate(prevProps) {
       return { notifyRequired: prevProps.search !== this.props.search || prevProps.category !== this.props.category };
@@ -79,6 +101,10 @@ class Listado extends React.Component{
       }
     }
 
+    handleBuy = (prod) => {
+      this.props.onProductBuy(prod);
+  }
+
     getProducts(params){
       let filter = "";
       if(params){
@@ -105,13 +131,15 @@ class Listado extends React.Component{
 
     render(){
         const { error, isLoaded, items } = this.state;
+        let userId = localStorage.getItem("user");
+        let username = localStorage.getItem("username");
     if (error) {
-      return <div>Error: {error.message}</div>;
+      return <div data-testid="Listado">Error: {error.message}</div>;
     } else if (!isLoaded) {
-      return <div>Cargando...</div>;
+      return <div data-testid="Listado">Cargando...</div>;
     } else {
       return (
-        <Container fluid="lg" style={{padding: '1%'}}>
+        <Container fluid="lg" style={{padding: '1%'}} data-testid="Listado">
           <Accordion defaultActiveKey="">
   <Accordion.Item eventKey="0">
     <Accordion.Header>Filtrar resultado</Accordion.Header>
@@ -122,7 +150,9 @@ class Listado extends React.Component{
           placeholder="0"
           aria-label="0"
           aria-describedby="basic-addon1"
+          type="number"
           value={this.state.gte}
+          onChange={this.handleChangeGte}
         />
       </InputGroup>
       <InputGroup className="mb-3">
@@ -131,7 +161,9 @@ class Listado extends React.Component{
           placeholder="0"
           aria-label="0"
           aria-describedby="basic-addon2"
+          type="number"
           value={this.state.lte}
+          onChange={this.handleChangeLte}
         />
       </InputGroup>
       <Button variant="success" onClick={this.filterProducts}>Filtrar</Button>
@@ -145,11 +177,10 @@ class Listado extends React.Component{
             <Card.Img variant="top" src={item.photo} />
             <Card.Body>
               <Card.Title>{item.nombre}</Card.Title>
-              <Card.Text>
-              {item.descripcion}
-              </Card.Text>
             </Card.Body>
+            <Card.Text>Cantidad disponible: {item.stock}</Card.Text>
             <Card.Text>$ {item.valor}</Card.Text>
+            <Button variant="primary" onClick={() => {this.handleBuy(item._id)}} disabled={userId==null}>Comprar</Button>
           </Card>
           </Col>
            
