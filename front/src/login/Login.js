@@ -1,6 +1,8 @@
 import React from 'react';
 import './Login.css';
 import Button from 'react-bootstrap/Button';
+import logo from '../google-logo.png';
+
 
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "@firebase/auth";
 
@@ -91,8 +93,11 @@ class Login extends React.Component {
         return <div>Cargando...</div>;
         } else {
         return (
-            <div className="product-form">
-                <Button onClick={this.handleGoogleSignIn} variant="success">Ingresear con Google</Button>
+            <div className="loginSection">
+                <img src={logo} width="100px"/>
+                <br/>
+                <br/>
+                <Button onClick={this.handleGoogleSignIn} variant="success">Iniciar sesión con Google</Button>
                 </div>
         );
         }

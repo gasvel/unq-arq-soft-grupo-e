@@ -7,6 +7,7 @@ import RegistrarUsuario from './registerUser/RegistrarUsuario';
 import Login from './login/Login';
 import UserListado from './productosUsuario/UserListado';
 import { getAuth } from '@firebase/auth';
+import InfoProducto from './infoProducto/InfoProducto';
 
 
 class App extends React.Component {
@@ -18,13 +19,6 @@ class App extends React.Component {
     }
 
 }
-
-  componentDidUpdate(){
-    console.log(getAuth().currentUser)
-    if(getAuth().currentUser == null){
-      localStorage.clear();
-    }
-  }
 
   handleSearchCategory = (category) => {
     this.setState({screen: 'list',category:category})
@@ -54,6 +48,15 @@ class App extends React.Component {
     this.setState({screen: 'editProduct',product: prod});
   }
 
+  handleProductBuy = (prod) => {
+    this.setState({screen: 'productInfo',product: prod});
+  }
+
+  handleSellCreated = () => {
+    alert("Compra realizada con éxito!");
+    this.setState({screen: 'list'})
+  }
+
   handleHomeScreen = () => {
     this.setState({screen: 'login'});
   }
@@ -76,13 +79,16 @@ class App extends React.Component {
         mainContent = <RegistrarUsuario onUserCreated={this.handleHomeScreen}/>;
         break
       case 'list':
-        mainContent = <Listado search={this.state.searchText} category={this.state.category}/>;
+        mainContent = <Listado search={this.state.searchText} category={this.state.category} onProductBuy={this.handleProductBuy}/>;
         break
       case 'userProducts':
         mainContent = <UserListado onProductEdit={this.handleProductEdit}/>;
         break;
       case 'editProduct':
         mainContent = <CrearProducto onProductCreated={this.handleProductCreation} product={this.state.product}/>
+        break;
+      case 'productInfo':
+        mainContent = <InfoProducto productId={this.state.product} onSellCreated={this.handleSellCreated}/>
         break;
       default:
         mainContent = <Login onUserLogin={this.handleLogin}/>;

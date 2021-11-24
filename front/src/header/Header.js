@@ -13,6 +13,7 @@ class CrearProducto extends React.Component{
     this.handleSearchChanged = this.handleSearchChanged.bind(this);
   }
 
+
   handleSearchChanged(event){
     this.setState({searchTxt: event.target.value});
   }

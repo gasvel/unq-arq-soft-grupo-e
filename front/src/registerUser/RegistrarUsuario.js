@@ -2,6 +2,8 @@ import React from 'react';
 import './RegistrarUsuario.css';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "@firebase/auth";
 import Button from 'react-bootstrap/Button';
+import logo from '../google-logo.png';
+import { Container } from 'react-bootstrap';
 
 
 class RegistrarUsuario extends React.Component{
@@ -157,7 +159,12 @@ class RegistrarUsuario extends React.Component{
         } else if (!isLoaded) {
         return <div>Cargando...</div>;
         } else if(this.state.screen === "auth"){
-            return(<Button onClick={this.handleGoogleSignIn}>Registrarme con Google</Button>)
+            return(<Container className="registerContainer">
+                <img src={logo} width="150px"></img> <br/> <br/>
+                <Button onClick={this.handleGoogleSignIn}>Registrarme con Google</Button>
+                </Container>
+            
+            )
         }else{
         return (
             <div className="product-form">
