@@ -24,20 +24,12 @@ export const createProduct: RequestHandler = async (req, res) => {
 }
 
 export const getProduct: RequestHandler = async (req, res) => {
-    let uid = await ValidateAuthService.validateAuth(req,res)
-    if(!uid){
-        return res.status(403).json({message: "Unauthorized"})
-    }
     const prodFound = await Product.findById(req.params.id)
     if (!prodFound) return res.status(404).json({message: 'Product not found'})
     return res.json(prodFound)
 }
 
 export const getProducts: RequestHandler = async (req, res) => {
-    let uid = await ValidateAuthService.validateAuth(req,res)
-    if(!uid){
-        return res.status(403).json({message: "Unauthorized"})
-    }
     try{
         const query = {}
         const paginate = (req.query.limit != undefined && req.query.page != undefined) ? getLimitSkip(req.query) : {}
@@ -65,10 +57,6 @@ export const getProducts: RequestHandler = async (req, res) => {
 }
 
 export const getProductsFromOwner: RequestHandler = async (req, res) => {
-    let uid = await ValidateAuthService.validateAuth(req,res)
-    if(!uid){
-        return res.status(403).json({message: "Unauthorized"})
-    }
     try{
 
         const paginate = (req.query.limit != undefined && req.query.page != undefined) ? getLimitSkip(req.query) : {}
