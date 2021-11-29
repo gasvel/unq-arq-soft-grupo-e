@@ -9,6 +9,7 @@ import UserListado from './productosUsuario/UserListado';
 import { getAuth } from '@firebase/auth';
 import InfoProducto from './infoProducto/InfoProducto';
 import VentasUser from './ventasUser/VentasUser';
+import InfoCarrito from './InfoCarrito/InfoCarrito';
 
 
 class App extends React.Component {
@@ -55,6 +56,7 @@ class App extends React.Component {
 
   handleSellCreated = () => {
     alert("Compra realizada con éxito!");
+    localStorage.removeItem("cart")
     this.setState({screen: 'list'})
   }
 
@@ -72,6 +74,10 @@ class App extends React.Component {
 
   handleUserSales = () => {
     this.setState({screen: 'userSales'});
+  }
+
+  handleUserCart = () => {
+    this.setState({screen: 'userCart'})
   }
 
   render(){
@@ -98,6 +104,9 @@ class App extends React.Component {
       case 'userSales':
         mainContent = <VentasUser/>
         break;
+      case 'userCart':
+        mainContent = <InfoCarrito onSellCreated={this.handleSellCreated}/>
+        break;
       default:
         mainContent = <Login onUserLogin={this.handleLogin}/>;
         break;
@@ -106,7 +115,7 @@ class App extends React.Component {
     return (
     <div className="App" data-testid="App">
       <Header onProductCreationEvent={this.handleCreationScreen} onLogin={this.handleUserLogin} onHome={this.handleHomeScreen} onRegister={this.handleRegisterScreen} onUserProducts={this.handleUserProductsScreen}
-      onCategory={this.handleSearchCategory} onSearchProduct={this.handleSearchProduct} onUserSales={this.handleUserSales}/>
+      onCategory={this.handleSearchCategory} onSearchProduct={this.handleSearchProduct} onUserSales={this.handleUserSales} onUserCart={this.handleUserCart}/>
       {mainContent}
 
     </div>

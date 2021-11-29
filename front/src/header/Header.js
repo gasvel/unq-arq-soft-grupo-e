@@ -57,10 +57,15 @@ class CrearProducto extends React.Component{
       this.goHome();
     }
 
+    openCart = () => {
+      this.props.onUserCart();
+    }
+
     render(){
       let userId = localStorage.getItem("user");
       let username = localStorage.getItem("username");
       let seller = localStorage.getItem("seller") === "true";
+      let cart = localStorage.getItem("cart") ? JSON.parse(localStorage.getItem("cart")).length : 0;
       let crearProducto;
       let misProductos;
       let misVentas;
@@ -69,7 +74,10 @@ class CrearProducto extends React.Component{
         <Nav.Link onClick={this.goToRegister}>Registrarme</Nav.Link>
       </Nav>;
       if(userId !== null){
-        registerOrSignOut = <Nav><Nav.Link onClick={this.signOut}>{username} ,Salir</Nav.Link></Nav>;
+        registerOrSignOut = <Nav>
+          <Nav.Link onClick={this.openCart}>Carrito ({cart})</Nav.Link>
+          <Nav.Link onClick={this.signOut}>{username} ,Salir</Nav.Link>
+          </Nav>;
         if(seller){
         crearProducto = <Nav.Link onClick={this.goToCreation}>Publicar</Nav.Link>;
         misProductos = <Nav.Link onClick={this.goToUserProducts}>Mis productos</Nav.Link>
@@ -92,7 +100,6 @@ class CrearProducto extends React.Component{
     <Navbar.Toggle aria-controls="navbar-dark-example" />
     <Navbar.Collapse id="navbar-dark-example">
       <Nav>
-        <Nav.Link>Más vendidos</Nav.Link>
         {crearProducto}
         {misProductos}
         {misVentas}

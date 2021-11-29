@@ -1,5 +1,5 @@
 import React from 'react';
-import {Card,Container,Row,Col,Accordion,InputGroup,FormControl,Button} from 'react-bootstrap';
+import {Card,Container,Row,Col,Accordion,InputGroup,FormControl,Button, Pagination} from 'react-bootstrap';
 
 class Listado extends React.Component{
     constructor(props){
@@ -7,8 +7,9 @@ class Listado extends React.Component{
         this.state = {
             error: null,
             isLoaded: false,
-            products: [],
-            gte:0,lte:0
+            items: [],
+            gte:0,lte:0,
+            limit:10,page:1
         }
         this.filterProducts = this.filterProducts.bind(this);
         this.handleChangeGte = this.handleChangeGte.bind(this);
@@ -34,6 +35,11 @@ class Listado extends React.Component{
           lte:val
         
       });
+    }
+
+    changePage = (event) => {
+      let newPage = event.target.key;
+      this.setState({...this.state,page: newPage});
     }
 
     getSnapshotBeforeUpdate(prevProps) {
@@ -132,7 +138,14 @@ class Listado extends React.Component{
     render(){
         const { error, isLoaded, items } = this.state;
         let userId = localStorage.getItem("user");
-        let username = localStorage.getItem("username");
+let paginationElems = [];
+for (let number = 1; number <= Math.ceil(this.state.items.length / this.state.limit); number++) {
+  paginationElems.push(
+    <Pagination.Item key={number} active={number === this.state.page} onClick={this.changePage}>
+      {number}
+    </Pagination.Item>
+  );
+}
     if (error) {
       return <div data-testid="Listado">Error: {error.message}</div>;
     } else if (!isLoaded) {
@@ -185,7 +198,15 @@ class Listado extends React.Component{
           </Col>
            
           ))}
+
+
           </Row>
+          <div style={{"textAlign":"center"}}>
+          <Pagination style={{"paddingLeft":"50%"}}>
+            {paginationElems}
+          </Pagination>
+          </div>
+
         </Container>
       );
     }

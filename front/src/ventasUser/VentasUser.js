@@ -70,7 +70,7 @@ class VentasUser extends React.Component{
             <Card.Text> Fecha {new Date(item.createdAt).toLocaleString()}</Card.Text>
             <Card.Text> Comprado por {item.buyer.username}</Card.Text>
             <Card.Text>Método de pago: {item.formaPago}</Card.Text>
-            <Card.Text>$ {item.taxes}</Card.Text>
+            <Card.Text>$ {item.costoTotal}</Card.Text>
           </Card>
           </Col>
            

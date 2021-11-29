@@ -21,10 +21,24 @@ class InfoProducto extends React.Component{
         this.setState({...this.state,amount:event.target.value});
     }
 
+    addToCart = () =>{
+        let actualCart = localStorage.getItem("cart");
+        let cartElem = {cantidad: this.state.amount,product: this.state.product};
+        let cartObj;
+        if(actualCart){
+            cartObj = JSON.parse(actualCart);
+            cartObj.push(cartElem);
+        }else{
+            cartObj = [cartElem];
+        }
+        localStorage.setItem("cart",JSON.stringify(cartObj));
+        alert("Elemento agregado al carrito");
+    }
+
     purchaseProduct= () =>{
         let userId = localStorage.getItem("user");
 
-        let sell = {product: this.state.product._id,taxes: (this.state.product.valor * this.state.amount),buyer: userId,formaPago:this.state.formaPago};
+        let sell = {products: [{productId:this.state.product._id,cantidadProductos: this.state.amount}],costoTotal: (this.state.product.valor * this.state.amount),buyer: userId,formaPago:this.state.formaPago};
         console.log(sell)
         getAuth().currentUser.getIdToken(true).then((idToken) => {
             const requestOptions = {
@@ -115,6 +129,7 @@ class InfoProducto extends React.Component{
                 <option value="Otros">Otros</option>
                 </Form.Select>
             </InputGroup>
+            <Button variant="success" onClick={this.addToCart}>Agregar al carrito</Button>
             <Button variant="primary" onClick={this.purchaseProduct}>Comprar</Button>
           </Card.Body>
           <Card.Footer className="text-muted"> Quedan disponibles: {this.state.product.stock - this.state.amount}</Card.Footer>
