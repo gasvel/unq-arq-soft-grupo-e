@@ -3,30 +3,41 @@ import WrapperProduct from '../WrapperProducts/WrapperProduct'
 import Product from '../Products/Product'
 import User from '../Users/User'
 
-const salesSchema = new Schema({
-    taxes:{
+const productsSchema = new Schema({
+    cantidadProductos:{
         type: Number,
         required: true,
         min: [1, 'Minimum value is 1.']
     },
+    productId:{
+        type: Schema.Types.ObjectId,
+        ref: 'Product',
+        required: true
+    }
+})
+
+const salesSchema = new Schema({
+    costoTotal:{
+        type: Number,
+        required: true,
+        min: [1, 'Minimum value is 1.']
+    },  
     buyer:{
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    seller:{
+    seller:[{
         type: Schema.Types.ObjectId,
         ref: 'User'
+    }],
+    products:{
+        type: [productsSchema],
     },
-    product:{
-        type: Schema.Types.ObjectId,
-        ref: 'Product',
-        required: true
-    },
-    wrapperProduct:{
+    wrapperProduct:[{
         type: Schema.Types.ObjectId,
         ref: 'WrapperProduct'
-    },
+    }],
     formaPago:{
         type: String,
         required: true,
