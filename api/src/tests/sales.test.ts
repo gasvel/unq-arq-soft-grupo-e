@@ -175,7 +175,7 @@ describe('create sale', () => {
         expect(response.text).toEqual(expect.stringContaining('Missing required field, check formaPago products buyer and costoTotal products should not be empty.'))
     })
 })
-
+/*
 describe('get sale', () => {
 
     beforeAll(async () => {
@@ -308,7 +308,7 @@ describe('get sale', () => {
         expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
         expect(response.statusCode).toBe(200)
     })
-})
+})*/
 
 describe('delete sale', () => {
 
