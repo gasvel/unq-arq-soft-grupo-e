@@ -11,6 +11,8 @@ router.get('/product/:id', productController.getProduct);
 
 router.post('/products', productController.createProduct);
 
+router.post('/products/csv', productController.createProductFromCSV);
+
 router.delete('/products/:id', productController.deleteProduct);
 
 router.put('/products/:id', productController.updateProduct);

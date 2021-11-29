@@ -3,6 +3,7 @@ import Product from "./Product"
 import User from "../Users/User"
 import { isNullishCoalesce } from "typescript"
 import ValidateAuthService from "../ValidateAuthService"
+import {Buffer} from 'buffer'
 
 
 export const createProduct: RequestHandler = async (req, res) => {
@@ -21,6 +22,34 @@ export const createProduct: RequestHandler = async (req, res) => {
     const prod = new Product(req.body)
     const savedProd = await prod.save()
     res.json(savedProd)
+}
+
+export const createProductFromCSV: RequestHandler = async (req, res) => {
+    let uid = await ValidateAuthService.validateAuth(req,res)
+    if(!uid){
+        return res.status(403).json({message: "Unauthorized"})
+    }
+    let csvBuffer = Buffer.from(req.body.csv, 'base64')
+    let csvText = csvBuffer.toString('ascii');
+    const csv = require('csvtojson')
+    csv().fromString(csvText).then( async (jsonObj) => {
+        let arrayProds : any[] = []
+        jsonObj.forEach( (element) => {
+            let newProd = new Product({
+                nombre: element.nombre,
+                valor: element.valor,
+                descripcion: element.descripcion,
+                stock: element.stock,
+                owner: element.owner,
+                photo: element.photo,
+                categoria: element.categoria
+            })
+            arrayProds.push(newProd)
+        })
+
+        const savedProds = await Product.create(arrayProds)
+        res.json(savedProds)
+    })
 }
 
 export const getProduct: RequestHandler = async (req, res) => {
