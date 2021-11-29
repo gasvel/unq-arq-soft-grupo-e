@@ -29,6 +29,10 @@ export const createProductFromCSV: RequestHandler = async (req, res) => {
     if(!uid){
         return res.status(403).json({message: "Unauthorized"})
     }
+
+    const userFound = await User.findOne({uid : uid})
+    if (!userFound) return res.status(404).json({message: 'User not found'})
+
     let csvBuffer = Buffer.from(req.body.csv, 'base64')
     let csvText = csvBuffer.toString('ascii');
     const csv = require('csvtojson')
@@ -40,7 +44,7 @@ export const createProductFromCSV: RequestHandler = async (req, res) => {
                 valor: element.valor,
                 descripcion: element.descripcion,
                 stock: element.stock,
-                owner: element.owner,
+                owner: userFound.get('_id'),
                 photo: element.photo,
                 categoria: element.categoria
             })
