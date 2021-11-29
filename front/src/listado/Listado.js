@@ -8,6 +8,7 @@ class Listado extends React.Component{
             error: null,
             isLoaded: false,
             items: [],
+            pageItems: [],
             gte:0,lte:0,
             limit:10,page:1
         }
@@ -38,8 +39,11 @@ class Listado extends React.Component{
     }
 
     changePage = (event) => {
-      let newPage = event.target.key;
-      this.setState({...this.state,page: newPage});
+      let newPage = event.target.textContent;
+      let limitPrev = this.state.limit * (newPage-1);
+      let limitEnd = (limitPrev + this.state.limit) > this.state.items.length-1 ? this.state.items.length-1 : (limitPrev + this.state.limit);
+      console.log(limitPrev);console.log(limitEnd);
+      this.setState({...this.state,page: newPage,pageItems: this.state.items.slice(limitPrev, limitEnd)});
     }
 
     getSnapshotBeforeUpdate(prevProps) {
@@ -123,7 +127,8 @@ class Listado extends React.Component{
                 console.log(result);
                 this.setState({
                     isLoaded: true,
-                    items: result
+                    items: result,
+                    pageItems: result.slice(0,this.state.limit)
                 });
             },
             (error) => {
@@ -136,7 +141,7 @@ class Listado extends React.Component{
     }
 
     render(){
-        const { error, isLoaded, items } = this.state;
+        const { error, isLoaded, items,pageItems } = this.state;
         let userId = localStorage.getItem("user");
 let paginationElems = [];
 for (let number = 1; number <= Math.ceil(this.state.items.length / this.state.limit); number++) {
@@ -184,7 +189,7 @@ for (let number = 1; number <= Math.ceil(this.state.items.length / this.state.li
   </Accordion.Item>
 </Accordion>
           <Row>
-          {items.map(item => (
+          {pageItems.map(item => (
             <Col key={item._id}>
             <Card  style={{ width: '18rem', height: '500px'}}>
             <Card.Img variant="top" src={item.photo} />
