@@ -1,5 +1,5 @@
 import React from 'react';
-import {Card,Container,Row,Col,Accordion,InputGroup,FormControl,Button, Pagination} from 'react-bootstrap';
+import {Card,Container,Row,Col,Accordion,InputGroup,FormControl,Button, Pagination,Spinner} from 'react-bootstrap';
 
 class Listado extends React.Component{
     constructor(props){
@@ -156,8 +156,11 @@ for (let number = 1; number <= Math.ceil(this.state.items.length / this.state.li
     if (error) {
       return <div data-testid="Listado">Error: {error.message}</div>;
     } else if (!isLoaded) {
-      return <div data-testid="Listado">Cargando...</div>;
+      return <Spinner animation="border" role="status">
+      <span className="visually-hidden">Cargando...</span>
+    </Spinner>;
     } else {
+      if(pageItems.length >0){
       return (
         <Container fluid="lg" style={{padding: '1%'}} data-testid="Listado">
           <Accordion defaultActiveKey="">
@@ -215,7 +218,12 @@ for (let number = 1; number <= Math.ceil(this.state.items.length / this.state.li
           </div>
 
         </Container>
-      );
+      );}
+      else{
+        <Container fluid="lg" style={{padding: '1%'}} data-testid="Listado">
+          No se encontraron productos
+          </Container>
+      }
     }
   }
     

@@ -135,6 +135,7 @@ class CrearProducto extends React.Component{
 
         if(!getAuth().currentUser){
             alert("Sesión expirada. Vuelva a loguearse");
+            localStorage.clear();
             return;
         }
         
@@ -235,7 +236,7 @@ class CrearProducto extends React.Component{
 <Accordion>
   {cargaMasiva}
   <Accordion.Item eventKey="1">
-    <Accordion.Header>Publicar producto</Accordion.Header>
+        <Accordion.Header>{this.state.product._id ? "Actualizar" : "Crear producto"}</Accordion.Header>
     <Accordion.Body>
     <div className="product-form">
                 <div className="imgSection">
