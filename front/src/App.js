@@ -23,11 +23,11 @@ class App extends React.Component {
 }
 
   handleSearchCategory = (category) => {
-    this.setState({screen: 'list',category:category})
+    this.setState({screen: 'list',category:category,searchText:null})
   }
 
   handleSearchProduct = (text) => {
-    this.setState({screen: 'list',searchText: text})
+    this.setState({screen: 'list',searchText: text,category:null})
   }
 
   handleProductCreation = () => {

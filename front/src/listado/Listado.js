@@ -10,7 +10,9 @@ class Listado extends React.Component{
             items: [],
             pageItems: [],
             gte:0,lte:0,
-            limit:10,page:1
+            limit:10,page:1,
+            category:props.category === '' ? null : props.category,
+            searchText: props.search === '' ? null : props.serach
         }
         this.filterProducts = this.filterProducts.bind(this);
         this.handleChangeGte = this.handleChangeGte.bind(this);
@@ -75,8 +77,8 @@ class Listado extends React.Component{
 
     componentDidMount(){
       let params = []
-      if(this.props.category != null){
-        params.push("categoria="+this.props.category)
+      if(this.state.category != null){
+        params.push("categoria="+this.state.category)
       }
       if(this.state.lte != null && this.state.lte != 0){
         params.push("lte="+this.state.lte)
@@ -84,8 +86,8 @@ class Listado extends React.Component{
       if(this.state.gte != null && this.state.gte != 0){
         params.push("gte="+this.state.gte)
       }
-      if(this.props.search != null){
-        params.push("nombre="+this.props.search)
+      if(this.state.search != null){
+        params.push("nombre="+this.state.searchText)
       }
       if(params.length > 0){
         params = params.join('&');
