@@ -6,13 +6,11 @@ import CrearProducto from './crearProducto/CrearProducto';
 import InfoProducto from './infoProducto/InfoProducto';
 import RegistrarUsuario from './registerUser/RegistrarUsuario';
 import UserListado from './productosUsuario/UserListado';
+import Listado from './listado/Listado';
 
 test('renders homePage', () => {
-  render(<App />);
-  const linkElement = screen.getByTestId(/App/i);
-  const homeElement = screen.getByTestId(/Listado/i);
-  expect(linkElement).toBeInTheDocument();
-  expect(homeElement).toBeInTheDocument();
+  const appComponent = shallow(<App />);
+  expect(appComponent.find(Listado).length).toBe(1);
 
   
 });

@@ -19,7 +19,6 @@ class CrearProducto extends React.Component{
   }
 
   openCategory = (event) =>{
-    console.log(event.target.name);
     this.props.onCategory(event.target.name);
   }
 
@@ -87,7 +86,7 @@ class CrearProducto extends React.Component{
         return(
           <Navbar variant="dark" bg="dark" expand="lg">
   <Container fluid>
-      <Navbar.Brand href="">
+      <Navbar.Brand href="" onClick={this.goHome}>
         <img
           alt="mtLogo"
           src={logo}

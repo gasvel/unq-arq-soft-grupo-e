@@ -61,7 +61,7 @@ class App extends React.Component {
   }
 
   handleHomeScreen = () => {
-    this.setState({screen: 'login'});
+    this.setState({screen: 'list'});
   }
 
   handleRegisterScreen = () => {

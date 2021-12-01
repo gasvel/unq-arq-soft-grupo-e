@@ -62,11 +62,11 @@ class VentasUser extends React.Component{
           <Row>
           {sells.map(item => (
             <Col key={item._id}>
-            <Card  style={{ width: '18rem', height: '300px'}}>
+            <Card  style={{ width: '18rem', minHeight: '400px'}}>
             <Card.Body>
-              <Card.Title>Venta {item.wrapperProduct.nombre}</Card.Title>
+              <Card.Title>Venta {item._id}</Card.Title>
             </Card.Body>
-            <Card.Text>Categoría {item.wrapperProduct.categoria}</Card.Text>
+          {item.wrapperProduct.map(prod => (<Card.Text><p>Producto: {prod.nombre}</p> <p>Valor: {prod.valor}</p></Card.Text>))}
             <Card.Text> Fecha {new Date(item.createdAt).toLocaleString()}</Card.Text>
             <Card.Text> Comprado por {item.buyer.username}</Card.Text>
             <Card.Text>Método de pago: {item.formaPago}</Card.Text>
